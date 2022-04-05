@@ -16,6 +16,15 @@ Explaination: https://ibm.box.com/s/jadfn2jsh4ans1pbp167g3ctbxn0sa0j
 
 - Clone the repo in `/opt/` directory on bastion. 
     Cloning the directory at any other loaction will require update in `$BASE_DIR` var in `setup-environment.sh` and in upstream test configurations in [knative/test-infra](https://github.com/knative/test-infra).
+    ```bash
+    cd /opt
+    git clone https://github.ibm.com/ppc64le-automation/knative-upstream-ci
+    cd knative-upstream-ci
+    
+    # clone k8s automation submodule
+    git submodule init
+    git submodule update
+    ```
 - Setup the k8s automation
     - Create `k8s-automation/hosts.yml` with node details. 
         Refer [k8s-automation/hosts-sample.yml](./k8s-automation/hosts-sample.yml) file.
