@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# **** This script runs on upstream knative ci server and is stored in GCP secret manger service ****
+# It sets up the host entires and fetchs & runs environment setup script
+
+# Usage
+# . /tmp/ci-script 
+
+set -e
+
+# CI_JOB is used to setup and patch code based on job type
+if [ -z ${CI_JOB} ]
+then
+    echo "Missing CI_JOB variable"
+    exit 1
+fi
+
+# Public IP of bastion node in PowerVS
+BASTION_IP="169.48.22.244"
+
+# add host entires
+echo "${BASTION_IP} cluster.ppc64le registry.ppc64le ppc64le" >> /etc/hosts
+
+#copy env setup script
+scp -i /opt/cluster/knative.pem -o MACs=hmac-sha2-256 -o StrictHostKeyChecking=no -oLogLevel=ERROR -o UserKnownHostsFile=/dev/null root@cluster.ppc64le:/opt/knative-upstream-ci/setup-environment.sh /tmp
+
+#run env setup script
+chmod +x /tmp/setup-environment.sh
+. /tmp/setup-environment.sh
