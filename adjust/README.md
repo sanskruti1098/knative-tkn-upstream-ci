@@ -1,0 +1,1 @@
+This directory contains scripts to update the knative source code with image replacements and other fixes during upsteam tests.
