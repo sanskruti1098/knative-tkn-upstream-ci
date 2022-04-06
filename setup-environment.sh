@@ -9,7 +9,7 @@ BASE_DIR=/opt/knative-upstream-ci
 K8S_AUTOMN_DIR=${BASE_DIR}/k8s-ansible-automation
 SSH_USER=root
 SSH_HOST="cluster.ppc64le"
-SSH_ARGS="-i /opt/cluster/knative.pem -o MACs=hmac-sha2-256 -o StrictHostKeyChecking=no -o LogLevel=ERROR -o UserKnownHostsFile=/dev/null"
+SSH_ARGS="-i /opt/cluster/knative-ssh -o MACs=hmac-sha2-256 -o StrictHostKeyChecking=no -o LogLevel=ERROR -o UserKnownHostsFile=/dev/null"
 
 # exit if CI_JOB is not set
 if [ -z ${CI_JOB} ]

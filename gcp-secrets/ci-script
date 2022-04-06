@@ -4,16 +4,17 @@
 # It sets up the host entires and fetchs & runs environment setup script
 
 # Usage
-# . /tmp/ci-script 
+# . /tmp/ci-script <CI job name>
 
 set -e
 
 # CI_JOB is used to setup and patch code based on job type
-if [ -z ${CI_JOB} ]
+if [ -z ${1} ]
 then
-    echo "Missing CI_JOB variable"
+    echo "Missing positional{1} argument for CI_JOB...."
     exit 1
 fi
+export CI_JOB=${1}
 
 # Public IP of bastion node in PowerVS
 BASTION_IP="169.48.22.244"
@@ -22,7 +23,7 @@ BASTION_IP="169.48.22.244"
 echo "${BASTION_IP} cluster.ppc64le registry.ppc64le ppc64le" >> /etc/hosts
 
 #copy env setup script
-scp -i /opt/cluster/knative.pem -o MACs=hmac-sha2-256 -o StrictHostKeyChecking=no -oLogLevel=ERROR -o UserKnownHostsFile=/dev/null root@cluster.ppc64le:/opt/knative-upstream-ci/setup-environment.sh /tmp
+scp -i /opt/cluster/knative-ssh -o MACs=hmac-sha2-256 -o StrictHostKeyChecking=no -oLogLevel=ERROR -o UserKnownHostsFile=/dev/null root@cluster.ppc64le:/opt/knative-upstream-ci/setup-environment.sh /tmp
 
 #run env setup script
 chmod +x /tmp/setup-environment.sh
