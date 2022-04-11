@@ -44,7 +44,7 @@ echo 'Cluster created successfully'
 ## Introducing CI_JOB var which can be used to fetch adjust script based on repo-tag
 ## $CI_JOB needs to be set in knative upstream job configurations
 echo 'Patching source code with ppc64le specific changes....'
-echo 'echo "No code ppc64le specific changes required."' > /tmp/adjust.sh
+echo 'echo "No ppc64le specific code changes required."' > /tmp/adjust.sh
 if [ ${CI_JOB} == "eventing-main" ]
 then
     scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/main/* /tmp/
