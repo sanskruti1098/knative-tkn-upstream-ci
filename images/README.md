@@ -6,3 +6,4 @@ This directory contains scripts/instructions to build required images which don'
 |Image|Replacement|Used In|
 |:-:|:-:|:-:|
 |`projectcontour/contour:v1.19.1`|`registry.ppc64le/contour:v1.19.1`|`serving`|
+|`ghcr.io/openzipkin/zipkin:2`|`registry.ppc64le/openzipkin/zipkin:test`|`eventing`|
