@@ -3,8 +3,6 @@
 # **** This script runs on upstream knative ci server from ci-script which is stored in GCP. ****
 # It sets up the k8s environment and updates the knative source for succesfully test run.
 
-set -e
-
 BASE_DIR=/opt/knative-upstream-ci
 K8S_AUTOMN_DIR=${BASE_DIR}/k8s-ansible-automation
 SSH_USER=root
