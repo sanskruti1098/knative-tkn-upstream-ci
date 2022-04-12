@@ -331,3 +331,11 @@ f76880394781: Layer already exists
 f909a8fc650d: Layer already exists
 test: digest: sha256:ac5e28556fa39de1283b68955d84a05d69cb053a11071018a8018eccf444587a size: 2200
 ```
+
+Alternative, we can save & load the image as tarball 
+
+```bash
+docker save -o zipkin.tar openzipkin/zipkin:test
+
+docker load < zipkin.tar
+```
