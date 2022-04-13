@@ -258,7 +258,7 @@ Run below on all master & worker nodes. Ensure that the k8s automation is trigge
 
 ### Test The Environment
 
-Refer testing [doc](../docs/testing.md).
+Refer testing [doc](../docs/testing.md#generate-prowjobs-with-mkpj-for-local-testing).
 
 ### Details to update in GCP secret
 
