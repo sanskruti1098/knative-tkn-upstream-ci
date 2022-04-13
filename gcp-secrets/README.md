@@ -15,7 +15,8 @@ To enable knative prow server to pull secrets from our GCP project, we need to p
 
 # Update a secret in GCP secret manager
 
-Ask Siddhesh Ghadi or Md.afsan Hossain for GCP access credentials.
+Ask Siddhesh Ghadi or Md.afsan Hossain for GCP access credentials.  
+Ensure that files have [linux line endings](https://stackoverflow.com/a/34376951) if using windows to push them to GCP.
 
 ```bash
 gcloud secrets versions add ci-script --data-file="ci-script"
