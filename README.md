@@ -30,9 +30,9 @@ Ensure ssh key is added onto bastion to access all nodes and ansible is installe
 
 - Setup the k8s automation
     - Create `k8s-ansible-automation/hosts.yml` with node details. 
-        Refer [k8s-ansible-automation/hosts-sample.yml](./k8s-ansible-automation/hosts-sample.yml) file.
+        Refer [k8s-ansible-automation/hosts-sample.yml](https://github.ibm.com/ppc64le-automation/k8s-ansible-automation/blob/main/hosts-sample.yml) file.
     - Create `k8s-ansible-automation/env.yml` with other details. 
-        Refer [k8s-ansible-automation/env-sample.yml](./k8s-ansible-automation/env-sample.yml) file.
+        Refer [k8s-ansible-automation/env-sample.yml](https://github.ibm.com/ppc64le-automation/k8s-ansible-automation/blob/main/env-sample.yml) file.
 
 - Trigger a test run to create k8s cluster
 
@@ -55,3 +55,10 @@ Add/update cluster details on upstream server via GCP. Refer [gcp-secrets](./gcp
 ### Create upstream jobs 
 
 Refer [adjustment-scripts.md](./docs/adjustment-scripts.md) to add new `adjust.sh` script and [testing.md](./docs/testing.md) to add & test the job configurations.
+
+
+### TODOs
+
+- [ ] Add retry logic for network failures.
+- [ ] Enable slack notifications for failed jobs.
+- [ ] Setup monitoring job for Power hardware & k8s cluster & add self healing mechanisms.
