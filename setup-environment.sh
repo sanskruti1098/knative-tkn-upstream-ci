@@ -18,7 +18,7 @@ fi
 
 ## Trigger k8s automation on remote power machines
 echo "Creating k8s cluster...."
-ssh ${SSH_ARGS} ${SSH_USER}@${SSH_HOST} ${K8S_AUTOMN_DIR}/create-cluster.sh &> /dev/null
+ssh ${SSH_ARGS} ${SSH_USER}@${SSH_HOST} ${K8S_AUTOMN_DIR}/create-cluster.sh
 if [ $? != 0 ]
 then
     echo "Cluster creation failed."
