@@ -231,10 +231,7 @@ git clone https://github.com/knative/eventing.git /tmp/eventing
 #file path of generated prowjob config
 JOB_FILE_PATH=/tmp/test-job 
 
-# Install bazel: https://bazel.build/install/ubuntu
-bazel run //prow/cmd/phaino -- $JOB_FILE_PATH \
-	--skip-volume-mounts=test-account \
-  --privileged
+go run ./prow/cmd/phaino $JOB_FILE_PATH --skip-volume-mounts=test-account --privileged
 
 # input to phaino
 /opt/cluster
