@@ -3,6 +3,14 @@
 # **** This script runs on upstream knative ci server from ci-script which is stored in GCP. ****
 # It sets up the k8s environment and updates the knative source for succesfully test run.
 
+# TODO: Find root cause for below
+# Sometimes job fails with no host found error. Looks like /etc/hosts patching done in ci-script
+# is not retained for some reason. Adding a fix for such situation. 
+# Public IP of bastion node in PowerVS
+BASTION_IP="169.48.22.244"
+# add host entires
+echo "${BASTION_IP} cluster.ppc64le registry.ppc64le ppc64le" >> /etc/hosts
+
 BASE_DIR=/opt/knative-upstream-ci
 K8S_AUTOMN_DIR=${BASE_DIR}/k8s-ansible-automation
 SSH_USER=root
