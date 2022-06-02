@@ -57,6 +57,9 @@ then
 elif [ ${CI_JOB} == "eventing-release-1.4" ]
 then
     scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/release-1.4/* /tmp/
+elif [ ${CI_JOB} == "eventing-release-1.5" ]
+then
+    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/release-1.5/* /tmp/
 fi
 chmod +x /tmp/adjust.sh
 . /tmp/adjust.sh
