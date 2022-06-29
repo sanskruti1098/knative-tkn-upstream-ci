@@ -3,6 +3,39 @@
 # **** This script runs on upstream knative ci server from ci-script which is stored in GCP. ****
 # It sets up the k8s environment and updates the knative source for succesfully test run.
 
+
+#--- Common Functions ---
+create_registry_secrets_in_serving(){
+    kubectl create ns knative-serving
+    kubectl -n knative-serving create secret generic registry-creds --from-file=config.json=$HOME/.docker/config.json
+    kubectl -n knative-serving create secret generic registry-certs --from-file=ssl.crt=/tmp/ssl.crt
+}
+
+install_contour(){
+    # TODO: remove yq dependency
+    wget https://github.com/mikefarah/yq/releases/download/v4.25.3/yq_linux_amd64 -P /tmp
+    chmod +x /tmp/yq_linux_amd64
+	
+    echo "Contour is being installed..."
+    # TODO: document envoy image creation process
+    envoy_replacement=registry.ppc64le/contour:v1.19.1
+    ISTIO_RELEASE=knative-v1.0.0
+    
+     # install istio-crds
+    #kubectl apply -f https://github.com/knative-sandbox/net-istio/releases/download/${ISTIO_RELEASE}/istio.yaml 2> /dev/null || true
+    curl --connect-timeout 10 --retry 5 -sL https://github.com/knative-sandbox/net-istio/releases/download/${ISTIO_RELEASE}/istio.yaml | \
+    /tmp/yq_linux_amd64 '. | select(.kind == "CustomResourceDefinition"), select(.kind == "Namespace")' | kubectl apply -f -
+    
+    # install contour
+    curl --connect-timeout 10 --retry 5 -sL https://raw.githubusercontent.com/knative/serving/release-1.1/third_party/contour-latest/contour.yaml | \
+    sed 's!\(image: \).*docker.io.*!\1'$envoy_replacement'!g' | kubectl apply -f -
+    kubectl apply -f https://raw.githubusercontent.com/knative/serving/main/third_party/contour-latest/net-contour.yaml
+    echo "Waiting until all pods under contour-external are ready..."
+    kubectl wait --timeout=5m pod --for=condition=Ready -n contour-external -l '!job-name'
+}
+#------------------------
+
+
 # TODO: Find root cause for below
 # Sometimes job fails with no host found error. Looks like /etc/hosts patching done in ci-script
 # is not retained for some reason. Adding a fix for such situation. 
@@ -44,6 +77,16 @@ export SSL_CERT_FILE=/tmp/ssl.crt
 mkdir -p $HOME/.kube/
 mv /tmp/config $HOME/.kube/
 
+# TODO: merge with patching conditional code below? 
+if [[ ${CI_JOB} =~ client-* ]]
+then
+    create_registry_secrets_in_serving &> /dev/null
+    install_contour &> /dev/null
+elif [[ ${CI_JOB} =~ eventing-* ]]
+then
+    echo ""
+fi
+
 echo 'Cluster created successfully'
 
 ## Fetch & run adjust.sh script to patch the source code with image replacements and other fixes
@@ -60,6 +103,9 @@ then
 elif [ ${CI_JOB} == "eventing-release-1.5" ]
 then
     scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/release-1.5/* /tmp/
+elif [ ${CI_JOB} == "client-main" ]
+then
+    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/client/main/* /tmp/
 fi
 chmod +x /tmp/adjust.sh
 . /tmp/adjust.sh
