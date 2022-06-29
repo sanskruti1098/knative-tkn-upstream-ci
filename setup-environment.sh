@@ -40,7 +40,7 @@ install_contour(){
 # Sometimes job fails with no host found error. Looks like /etc/hosts patching done in ci-script
 # is not retained for some reason. Adding a fix for such situation. 
 # Public IP of bastion node in PowerVS
-BASTION_IP="169.48.22.246"
+BASTION_IP="169.48.22.244"
 # add host entires
 echo "${BASTION_IP} cluster.ppc64le registry.ppc64le ppc64le" >> /etc/hosts
 
@@ -100,6 +100,9 @@ then
 elif [ ${CI_JOB} == "eventing-release-1.4" ]
 then
     scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/release-1.4/* /tmp/
+elif [ ${CI_JOB} == "eventing-release-1.5" ]
+then
+    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/release-1.5/* /tmp/
 elif [ ${CI_JOB} == "client-main" ]
 then
     scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/client/main/* /tmp/
