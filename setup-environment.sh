@@ -10,6 +10,29 @@ create_registry_secrets_in_serving(){
     kubectl -n knative-serving create secret generic registry-creds --from-file=config.json=$HOME/.docker/config.json
     kubectl -n knative-serving create secret generic registry-certs --from-file=ssl.crt=/tmp/ssl.crt
 }
+
+install_contour(){
+    # TODO: remove yq dependency
+    wget https://github.com/mikefarah/yq/releases/download/v4.25.3/yq_linux_amd64 -P /tmp
+    chmod +x /tmp/yq_linux_amd64
+	
+    echo "Contour is being installed..."
+    # TODO: document envoy image creation process
+    envoy_replacement=registry.ppc64le/contour:v1.19.1
+    ISTIO_RELEASE=knative-v1.0.0
+    
+     # install istio-crds
+    #kubectl apply -f https://github.com/knative-sandbox/net-istio/releases/download/${ISTIO_RELEASE}/istio.yaml 2> /dev/null || true
+    curl --connect-timeout 10 --retry 5 -sL https://github.com/knative-sandbox/net-istio/releases/download/${ISTIO_RELEASE}/istio.yaml | \
+    /tmp/yq_linux_amd64 '. | select(.kind == "CustomResourceDefinition"), select(.kind == "Namespace")' | kubectl apply -f -
+    
+    # install contour
+    curl --connect-timeout 10 --retry 5 -sL https://raw.githubusercontent.com/knative/serving/release-1.1/third_party/contour-latest/contour.yaml | \
+    sed 's!\(image: \).*docker.io.*!\1'$envoy_replacement'!g' | kubectl apply -f -
+    kubectl apply -f https://raw.githubusercontent.com/knative/serving/main/third_party/contour-latest/net-contour.yaml
+    echo "Waiting until all pods under contour-external are ready..."
+    kubectl wait --timeout=5m pod --for=condition=Ready -n contour-external -l '!job-name'
+}
 #------------------------
 
 
@@ -17,7 +40,7 @@ create_registry_secrets_in_serving(){
 # Sometimes job fails with no host found error. Looks like /etc/hosts patching done in ci-script
 # is not retained for some reason. Adding a fix for such situation. 
 # Public IP of bastion node in PowerVS
-BASTION_IP="169.48.22.244"
+BASTION_IP="169.48.22.246"
 # add host entires
 echo "${BASTION_IP} cluster.ppc64le registry.ppc64le ppc64le" >> /etc/hosts
 
@@ -58,6 +81,7 @@ mv /tmp/config $HOME/.kube/
 if [[ ${CI_JOB} =~ client-* ]]
 then
     create_registry_secrets_in_serving &> /dev/null
+    install_contour &> /dev/null
 elif [[ ${CI_JOB} =~ eventing-* ]]
 then
     echo ""
