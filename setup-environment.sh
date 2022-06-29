@@ -3,6 +3,16 @@
 # **** This script runs on upstream knative ci server from ci-script which is stored in GCP. ****
 # It sets up the k8s environment and updates the knative source for succesfully test run.
 
+
+#--- Common Functions ---
+create_registry_secrets_in_serving(){
+    kubectl create ns knative-serving
+    kubectl -n knative-serving create secret generic registry-creds --from-file=config.json=$HOME/.docker/config.json
+    kubectl -n knative-serving create secret generic registry-certs --from-file=ssl.crt=/tmp/ssl.crt
+}
+#------------------------
+
+
 # TODO: Find root cause for below
 # Sometimes job fails with no host found error. Looks like /etc/hosts patching done in ci-script
 # is not retained for some reason. Adding a fix for such situation. 
@@ -43,6 +53,15 @@ export SSL_CERT_FILE=/tmp/ssl.crt
 # setup k8s access
 mkdir -p $HOME/.kube/
 mv /tmp/config $HOME/.kube/
+
+# TODO: merge with patching conditional code below? 
+if [[ ${CI_JOB} =~ client-* ]]
+then
+    create_registry_secrets_in_serving &> /dev/null
+elif [[ ${CI_JOB} =~ eventing-* ]]
+then
+    echo ""
+fi
 
 echo 'Cluster created successfully'
 
