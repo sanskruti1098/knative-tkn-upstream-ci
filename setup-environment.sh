@@ -106,6 +106,9 @@ then
 elif [ ${CI_JOB} == "client-main" ]
 then
     scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/client/main/* /tmp/
+elif [ ${CI_JOB} == "operator-main" ]
+then
+    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/operator/main/* /tmp/
 fi
 chmod +x /tmp/adjust.sh
 . /tmp/adjust.sh
