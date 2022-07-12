@@ -82,6 +82,9 @@ if [[ ${CI_JOB} =~ client-* ]]
 then
     create_registry_secrets_in_serving &> /dev/null
     install_contour &> /dev/null
+elif [[ ${CI_JOB} =~ operator-* ]]
+then
+    install_contour &> /dev/null
 elif [[ ${CI_JOB} =~ eventing-* ]]
 then
     echo ""
@@ -106,6 +109,9 @@ then
 elif [ ${CI_JOB} == "client-main" ]
 then
     scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/client/main/* /tmp/
+elif [ ${CI_JOB} == "operator-main" ]
+then
+    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/operator/main/* /tmp/
 fi
 chmod +x /tmp/adjust.sh
 . /tmp/adjust.sh
