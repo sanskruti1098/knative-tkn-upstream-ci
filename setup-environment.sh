@@ -106,12 +106,21 @@ then
 elif [ ${CI_JOB} == "eventing-release-1.5" ]
 then
     scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/release-1.5/* /tmp/
+elif [ ${CI_JOB} == "eventing-release-1.6" ]
+then
+    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/release-1.6/* /tmp/
 elif [ ${CI_JOB} == "client-main" ]
 then
     scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/client/main/* /tmp/
+elif [ ${CI_JOB} == "client-release-1.6" ]
+then
+    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/client/release-1.6/* /tmp/
 elif [ ${CI_JOB} == "operator-main" ]
 then
     scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/operator/main/* /tmp/
+elif [ ${CI_JOB} == "operator-release-1.6" ]
+then
+    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/operator/release-1.6/* /tmp/
 fi
 chmod +x /tmp/adjust.sh
 . /tmp/adjust.sh
