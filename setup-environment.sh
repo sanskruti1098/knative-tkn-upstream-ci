@@ -100,6 +100,9 @@ echo 'echo "No ppc64le specific code changes required."' > /tmp/adjust.sh
 if [ ${CI_JOB} == "eventing-main" ]
 then
     scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/main/* /tmp/
+elif [ ${CI_JOB} == "eventing_rekt-main" ]
+then
+    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/main/* /tmp/
 elif [ ${CI_JOB} == "eventing-release-1.4" ]
 then
     scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/release-1.4/* /tmp/
