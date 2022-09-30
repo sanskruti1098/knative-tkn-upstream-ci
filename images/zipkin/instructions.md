@@ -177,7 +177,7 @@ OpenJDK 64-Bit Server VM (build 15.0.5+3-alpine-r0, mixed mode)
 
 Use `openzipkin/java:test` & `openzipkin/java:test-jre` in image build of `openzipkin/java`.
 
-## Build openzipkin/java image
+## Build openzipkin/zipkin image
 
 - [Container Image](https://github.com/openzipkin/zipkin/pkgs/container/zipkin)
 - [Source Code](https://github.com/openzipkin/zipkin)
