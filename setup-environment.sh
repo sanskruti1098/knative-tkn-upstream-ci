@@ -148,6 +148,12 @@ then
 elif [ ${CI_JOB} == "operator-release-1.8" ]
 then
     scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/operator/release-1.8/* /tmp/
+elif [ ${CI_JOB} == "kourier-main" ]
+then
+    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/serving/kourier/main/* /tmp/
+elif [ ${CI_JOB} == "contour-main" ]
+then
+    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/serving/contour/main/* /tmp/
 fi
 chmod +x /tmp/adjust.sh
 . /tmp/adjust.sh
