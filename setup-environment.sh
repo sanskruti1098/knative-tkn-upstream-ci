@@ -88,6 +88,12 @@ then
 elif [[ ${CI_JOB} =~ eventing-* ]]
 then
     echo ""
+elif [[ ${CI_JOB} =~ contour-* ]]
+then
+    create_registry_secrets_in_serving &> /dev/null
+elif [[ ${CI_JOB} =~ kourier-* ]]
+then
+    create_registry_secrets_in_serving &> /dev/null
 fi
 
 echo 'Cluster created successfully'
