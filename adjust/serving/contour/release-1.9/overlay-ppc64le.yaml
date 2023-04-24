@@ -86,7 +86,7 @@ spec:
         #@overlay/match by=overlay.index(0)
       - image: registry.ppc64le/contour:v1.21.1
         #@overlay/match by=overlay.index(1)
-      - image: registry.ppc64le/envoyproxy/envoy:v1.19.1
+      - image: registry.ppc64le/envoyproxy/envoy:v1.22.6
       initContainers:
         #@overlay/match by=overlay.index(0)
       - image: registry.ppc64le/contour:v1.21.1
@@ -118,7 +118,7 @@ spec:
         #@overlay/match by=overlay.index(0)
       - image: registry.ppc64le/contour:v1.21.1
         #@overlay/match by=overlay.index(1)
-      - image: registry.ppc64le/envoyproxy/envoy:v1.19.1
+      - image: registry.ppc64le/envoyproxy/envoy:v1.22.6
       initContainers:
         #@overlay/match by=overlay.index(0)
       - image: registry.ppc64le/contour:v1.21.1
