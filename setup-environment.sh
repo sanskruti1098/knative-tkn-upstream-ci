@@ -40,7 +40,7 @@ install_contour(){
 # Sometimes job fails with no host found error. Looks like /etc/hosts patching done in ci-script
 # is not retained for some reason. Adding a fix for such situation. 
 # Public IP of bastion node in PowerVS
-BASTION_IP="169.48.22.244"
+BASTION_IP="169.54.112.118"
 # add host entires
 echo "${BASTION_IP} cluster.ppc64le registry.ppc64le ppc64le" >> /etc/hosts
 
