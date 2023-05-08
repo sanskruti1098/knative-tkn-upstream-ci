@@ -88,81 +88,27 @@ then
 elif [[ ${CI_JOB} =~ eventing-* ]]
 then
     echo ""
-elif [[ ${CI_JOB} =~ contour-* ]]
-then
-    create_registry_secrets_in_serving &> /dev/null
-elif [[ ${CI_JOB} =~ kourier-* ]]
+elif [[ ${CI_JOB} =~ contour-* || ${CI_JOB} =~ kourier-* ]]
 then
     create_registry_secrets_in_serving &> /dev/null
 fi
 
 echo 'Cluster created successfully'
+echo 'Patching source code with ppc64le specific changes....'
+KNATIVE_COMPONENT=$(echo ${CI_JOB} | cut -d '-' -f1)
+RELEASE=$(echo ${CI_JOB} | cut -d '-' -f2-)
+
+if [[ ${CI_JOB} =~ contour-* || ${CI_JOB} =~ kourier-* ]]
+then
+    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/serving/${KNATIVE_COMPONENT}/${RELEASE}/* /tmp/
+else
+    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/${KNATIVE_COMPONENT}/${RELEASE}/* /tmp/
+fi
+
 
 ## Fetch & run adjust.sh script to patch the source code with image replacements and other fixes
 ## Introducing CI_JOB var which can be used to fetch adjust script based on repo-tag
 ## $CI_JOB needs to be set in knative upstream job configurations
-echo 'Patching source code with ppc64le specific changes....'
-echo 'echo "No ppc64le specific code changes required."' > /tmp/adjust.sh
-if [ ${CI_JOB} == "eventing-main" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/main/* /tmp/
-elif [ ${CI_JOB} == "eventing_rekt-main" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/main/* /tmp/
-elif [ ${CI_JOB} == "eventing_rekt-1.7" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/main/* /tmp/
-elif [ ${CI_JOB} == "eventing_rekt-1.8" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/main/* /tmp/
-elif [ ${CI_JOB} == "eventing_rekt-1.9" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/main/* /tmp/
-elif [ ${CI_JOB} == "eventing-release-1.7" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/release-1.7/* /tmp/
-elif [ ${CI_JOB} == "eventing-release-1.8" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/release-1.8/* /tmp/
-elif [ ${CI_JOB} == "eventing-release-1.9" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/release-1.9/* /tmp/
-elif [ ${CI_JOB} == "client-main" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/client/main/* /tmp/
-elif [ ${CI_JOB} == "client-release-1.7" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/client/release-1.7/* /tmp/
-elif [ ${CI_JOB} == "client-release-1.8" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/client/release-1.8/* /tmp/
-elif [ ${CI_JOB} == "client-release-1.9" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/client/release-1.9/* /tmp/
-elif [ ${CI_JOB} == "operator-main" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/operator/main/* /tmp/
-elif [ ${CI_JOB} == "operator-release-1.7" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/operator/release-1.7/* /tmp/
-elif [ ${CI_JOB} == "operator-release-1.8" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/operator/release-1.8/* /tmp/
-elif [ ${CI_JOB} == "operator-release-1.9" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/operator/release-1.9/* /tmp/
-elif [ ${CI_JOB} == "kourier-main" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/serving/kourier/main/* /tmp/
-elif [ ${CI_JOB} == "kourier-release-1.9" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/serving/kourier/release-1.9/* /tmp/
-elif [ ${CI_JOB} == "contour-main" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/serving/contour/main/* /tmp/
-elif [ ${CI_JOB} == "contour-release-1.9" ]
-then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/serving/contour/release-1.9/* /tmp/
-fi
+#echo 'echo "No ppc64le specific code changes required."' > /tmp/adjust.sh
 chmod +x /tmp/adjust.sh
 . /tmp/adjust.sh
