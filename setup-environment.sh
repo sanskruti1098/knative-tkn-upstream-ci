@@ -101,6 +101,9 @@ RELEASE=$(echo ${CI_JOB} | cut -d '-' -f2-)
 if [[ ${CI_JOB} =~ contour-* || ${CI_JOB} =~ kourier-* ]]
 then
     scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/serving/${KNATIVE_COMPONENT}/${RELEASE}/* /tmp/
+elif [[ ${CI_JOB} =~ eventing_rekt-* ]]
+then
+    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/main/* /tmp/
 else
     scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/${KNATIVE_COMPONENT}/${RELEASE}/* /tmp/
 fi
