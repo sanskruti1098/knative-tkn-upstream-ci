@@ -12,7 +12,7 @@ curl --connect-timeout 10 --retry 5 -L https://github.com/knative-sandbox/net-co
 curl --connect-timeout 10 --retry 5 -L https://github.com/knative-sandbox/net-contour/releases/download/knative-v1.6.0/net-contour.yaml -o third_party/contour-latest/net-contour.yaml
 
 #Increase delayed-close-timeout
-sed -i 's/delayed-close-timeout: 1s/delayed-close-timeout: 10s/g' third_party/contour-latest/contour.yaml
+sed -i 's/delayed-close-timeout: 1s/delayed-close-timeout: infinity/g' third_party/contour-latest/contour.yaml
 
 #Place overlay
 cp /tmp/overlay-ppc64le.yaml test/config/ytt/core/overlay-ppc64le.yaml
