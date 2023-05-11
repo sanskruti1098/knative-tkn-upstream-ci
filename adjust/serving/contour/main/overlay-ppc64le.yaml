@@ -7,27 +7,27 @@ spec:
   template:
     spec:
       containers:
-      #@overlay/match by=overlay.all, expects="1+"
-      - env:
-        #@overlay/append
-        - name: SSL_CERT_DIR
-          value: /opt/certs
-        - name: DOCKER_CONFIG
-          value: /.docker
-        #@overlay/match missing_ok=True
-        volumeMounts:
-        - mountPath: .docker
-          name: registry-creds
-        - mountPath: /opt/certs
-          name: registry-certs
+        #@overlay/match by=overlay.all, expects="1+"
+        - env:
+            #@overlay/append
+            - name: SSL_CERT_DIR
+              value: /opt/certs
+            - name: DOCKER_CONFIG
+              value: /.docker
+          #@overlay/match missing_ok=True
+          volumeMounts:
+            - mountPath: .docker
+              name: registry-creds
+            - mountPath: /opt/certs
+              name: registry-certs
       #@overlay/match missing_ok=True
       volumes:
-      - name: registry-creds
-        secret:
-          secretName: registry-creds
-      - name: registry-certs
-        secret:
-          secretName: registry-certs      
+        - name: registry-creds
+          secret:
+            secretName: registry-creds
+        - name: registry-certs
+          secret:
+            secretName: registry-certs
 
 #@overlay/match by=subset("Job", "", "contour-internal"), expects=1
 #@overlay/match-child-defaults missing_ok=True
@@ -46,16 +46,16 @@ spec:
 spec:
   #@overlay/replace
   ports:
-  - port: 80
-    name: http
-    protocol: TCP
-    targetPort: 8080
-    nodePort: 9470
-  - port: 443
-    name: https
-    protocol: TCP
-    targetPort: 8443
-    nodePort: 9475
+    - port: 80
+      name: http
+      protocol: TCP
+      targetPort: 8080
+      nodePort: 9470
+    - port: 443
+      name: https
+      protocol: TCP
+      targetPort: 8443
+      nodePort: 9475
   #@overlay/replace
   type: NodePort
 
@@ -66,7 +66,7 @@ spec:
     spec:
       containers:
         #@overlay/match by=overlay.index(0)
-      - image: registry.ppc64le/contour:v1.21.1
+        - image: registry.ppc64le/contour:v1.21.1
 
 #@overlay/match by=subset("Deployment", "contour", "contour-external"), expects=1
 ---
@@ -75,7 +75,7 @@ spec:
     spec:
       containers:
         #@overlay/match by=overlay.index(0)
-      - image: registry.ppc64le/contour:v1.21.1
+        - image: registry.ppc64le/contour:v1.21.1
 
 #@overlay/match by=subset("DaemonSet", "envoy", "contour-external"), expects=1
 ---
@@ -84,12 +84,12 @@ spec:
     spec:
       containers:
         #@overlay/match by=overlay.index(0)
-      - image: registry.ppc64le/contour:v1.21.1
-        #@overlay/match by=overlay.index(1)
-      - image: registry.ppc64le/envoyproxy/envoy:v1.22.6
+        - image: registry.ppc64le/contour:v1.21.1
+          #@overlay/match by=overlay.index(1)
+        - image: registry.ppc64le/maistra/envoy:v2.2
       initContainers:
         #@overlay/match by=overlay.index(0)
-      - image: registry.ppc64le/contour:v1.21.1
+        - image: registry.ppc64le/contour:v1.21.1
 
 #@overlay/match by=subset("Job", "contour-certgen-v1.21.1", "contour-internal"), expects=1
 ---
@@ -98,7 +98,7 @@ spec:
     spec:
       containers:
         #@overlay/match by=overlay.index(0)
-      - image: registry.ppc64le/contour:v1.21.1
+        - image: registry.ppc64le/contour:v1.21.1
 
 #@overlay/match by=subset("Deployment", "contour", "contour-internal"), expects=1
 ---
@@ -107,7 +107,7 @@ spec:
     spec:
       containers:
         #@overlay/match by=overlay.index(0)
-      - image: registry.ppc64le/contour:v1.21.1
+        - image: registry.ppc64le/contour:v1.21.1
 
 #@overlay/match by=subset("DaemonSet", "envoy", "contour-internal"), expects=1
 ---
@@ -116,9 +116,9 @@ spec:
     spec:
       containers:
         #@overlay/match by=overlay.index(0)
-      - image: registry.ppc64le/contour:v1.21.1
-        #@overlay/match by=overlay.index(1)
-      - image: registry.ppc64le/envoyproxy/envoy:v1.22.6
+        - image: registry.ppc64le/contour:v1.21.1
+          #@overlay/match by=overlay.index(1)
+        - image: registry.ppc64le/maistra/envoy:v2.2
       initContainers:
         #@overlay/match by=overlay.index(0)
-      - image: registry.ppc64le/contour:v1.21.1
+        - image: registry.ppc64le/contour:v1.21.1
