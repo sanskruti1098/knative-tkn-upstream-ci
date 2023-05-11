@@ -66,6 +66,9 @@ then
     exit 1
 fi
 
+#Install metrics server
+curl --connect-timeout 10 --retry 5 -sL https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml | sed "/.*--metric-resolution.*/a\        - --kubelet-insecure-tls" | kubectl apply -f -
+
 echo "Setting up access to k8s cluster...."
 # copy access files
 scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${K8S_AUTOMN_DIR}/share/* /tmp
