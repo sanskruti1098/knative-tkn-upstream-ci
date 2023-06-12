@@ -96,6 +96,7 @@ then
     create_registry_secrets_in_serving &> /dev/null
 elif [[ ${CI_JOB} =~ plugin_event-* ]]
 then
+    create_registry_secrets_in_serving &> /dev/null
     echo ""
 fi
 
