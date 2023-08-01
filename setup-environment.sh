@@ -18,7 +18,7 @@ install_contour(){
 	
     echo "Contour is being installed..."
     # TODO: document envoy image creation process
-    envoy_replacement=registry.ppc64le/contour:v1.19.1
+    envoy_replacement=registry.ppc64le/maistra/envoy:v2.2
     ISTIO_RELEASE=knative-v1.0.0
     
      # install istio-crds
