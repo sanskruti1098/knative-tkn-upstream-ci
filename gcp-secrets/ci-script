@@ -18,7 +18,7 @@ export CI_JOB=${1}
 BASTION_IP="169.54.112.118"
 
 # add host entires
-#echo "${BASTION_IP} cluster.ppc64le registry.ppc64le ppc64le" >> /etc/hosts
+#echo "${BASTION_IP} cluster.ppc64le registry.apps.a9367076.nip.io ppc64le" >> /etc/hosts
 
 #copy env setup script
 scp -i /opt/cluster/knative-ssh -o MACs=hmac-sha2-256 -o StrictHostKeyChecking=no -oLogLevel=ERROR -o UserKnownHostsFile=/dev/null root@a9367076.nip.io:/opt/knative-upstream-ci/setup-environment.sh /tmp

@@ -53,4 +53,4 @@ spec:
     spec:
       containers:
         #@overlay/match by=overlay.index(0)
-      - image: registry.ppc64le/envoyproxy/envoy:v1.22.6
+      - image: registry.apps.a9367076.nip.io/envoyproxy/envoy:v1.22.6

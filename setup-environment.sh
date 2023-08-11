@@ -18,7 +18,7 @@ install_contour(){
 	
     echo "Contour is being installed..."
     # TODO: document envoy image creation process
-    envoy_replacement=registry.ppc64le/maistra/envoy:v2.2
+    envoy_replacement=registry.apps.a9367076.nip.io/maistra/envoy:v2.2
     ISTIO_RELEASE=knative-v1.0.0
     
      # install istio-crds
@@ -42,7 +42,7 @@ install_contour(){
 # Public IP of bastion node in PowerVS
 BASTION_IP="169.54.112.118"
 # add host entires
-#echo "${BASTION_IP} cluster.ppc64le registry.ppc64le ppc64le" >> /etc/hosts
+#echo "${BASTION_IP} cluster.ppc64le registry.apps.a9367076.nip.io ppc64le" >> /etc/hosts
 
 BASE_DIR=/opt/knative-upstream-ci
 K8S_AUTOMN_DIR=${BASE_DIR}/k8s-ansible-automation

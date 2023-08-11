@@ -26,5 +26,5 @@ FROM --platform=$BUILDPLATFORM $BUILD_BASE_IMAGE AS build
 Build image
 
 ```bash
-REGISTRY=registry.ppc64le VERSION=v1.19.1 make push
+REGISTRY=registry.apps.a9367076.nip.io VERSION=v1.19.1 make push
 ```
