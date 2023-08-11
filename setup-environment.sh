@@ -42,12 +42,12 @@ install_contour(){
 # Public IP of bastion node in PowerVS
 BASTION_IP="169.54.112.118"
 # add host entires
-echo "${BASTION_IP} cluster.ppc64le registry.ppc64le ppc64le" >> /etc/hosts
+#echo "${BASTION_IP} cluster.ppc64le registry.ppc64le ppc64le" >> /etc/hosts
 
 BASE_DIR=/opt/knative-upstream-ci
 K8S_AUTOMN_DIR=${BASE_DIR}/k8s-ansible-automation
 SSH_USER=root
-SSH_HOST="cluster.ppc64le"
+SSH_HOST="a9367076.nip.io"
 SSH_ARGS="-i /opt/cluster/knative-ssh -o MACs=hmac-sha2-256 -o StrictHostKeyChecking=no -o LogLevel=ERROR -o UserKnownHostsFile=/dev/null"
 
 # exit if CI_JOB is not set
