@@ -22,6 +22,7 @@ BASTION_IP="169.54.112.118"
 
 #copy env setup script
 scp -i /opt/cluster/knative-ssh -o MACs=hmac-sha2-256 -o StrictHostKeyChecking=no -oLogLevel=ERROR -o UserKnownHostsFile=/dev/null root@a9367076.nip.io:/opt/knative-upstream-ci/setup-environment.sh /tmp
+scp -i /opt/cluster/knative-ssh -o MACs=hmac-sha2-256 -o StrictHostKeyChecking=no -oLogLevel=ERROR -o UserKnownHostsFile=/dev/null root@a9367076.nip.io:/opt/knative-upstream-ci/k8s.sh /tmp
 
 if [ ! -f /tmp/setup-environment.sh ]
 then
@@ -29,6 +30,6 @@ then
     exit 1
 fi
 
-#run env setup script
+# #run env setup script
 chmod +x /tmp/setup-environment.sh
 . /tmp/setup-environment.sh
