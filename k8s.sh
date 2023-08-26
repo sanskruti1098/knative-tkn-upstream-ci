@@ -41,12 +41,12 @@ EOF
 # Critical section, should run with lock.
 # https://jdimpson.livejournal.com/5685.html?
 function acquire_cluster(){
-    echo_status "Acquiring lock...."
+    #echo_status "Acquiring lock...."
     exec 8>$SCRIPT_LOCK
 
     if flock --timeout 60 -x 8; then
-        echo_status "Lock acquired."
-        echo_status "Acquiring cluster...."
+        #echo_status "Lock acquired."
+        #echo_status "Acquiring cluster...."
 
         local acquired=false
         local cluster_name=""
@@ -95,8 +95,8 @@ function acquire_cluster(){
             #echo_status "Lock released."
             exit 0
         else
-            echo_status "No clusters available. Please try after some time."
-            echo_status "Lock released."
+            #echo_status "No clusters available. Please try after some time."
+            #echo_status "Lock released."
             exit 1
         fi
 

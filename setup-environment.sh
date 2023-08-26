@@ -74,7 +74,7 @@ echo "Acquiring k8s cluster...."
 #     exit 1
 # fi
 chmod +x /tmp/k8s.sh
-C_NAME=$(ssh ${SSH_ARGS} ${SSH_USER}@${SSH_HOST} /tmp/k8s.sh acquire -v "1.27.4")
+C_NAME=$(ssh ${SSH_ARGS} ${SSH_USER}@${SSH_HOST} ${BASE_DIR}/k8s.sh acquire -v "1.27.4")
 
 if [ -z "$C_NAME" ]; then
     echo "No clusters available."
