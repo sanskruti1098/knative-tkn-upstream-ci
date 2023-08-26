@@ -11,10 +11,10 @@ create_registry_secrets_in_serving(){
     kubectl -n knative-serving create secret generic registry-certs --from-file=ssl.crt=/tmp/ssl.crt
 }
 
-create_registry_secrets_in_eventing(){
-    kubectl create ns knative-eventing
-    kubectl -n knative-eventing create secret generic registry-creds --from-file=config.json=$HOME/.docker/config.json
-}
+# create_registry_secrets_in_eventing(){
+#     kubectl create ns knative-eventing
+#     kubectl -n knative-eventing create secret generic registry-creds --from-file=config.json=$HOME/.docker/config.json
+# }
 
 
 install_contour(){
@@ -73,7 +73,7 @@ echo "Acquiring k8s cluster...."
 #     echo "Cluster creation failed."
 #     exit 1
 # fi
-chmod +x /tmp/k8s.sh
+# chmod +x /tmp/k8s.sh
 C_NAME=$(ssh ${SSH_ARGS} ${SSH_USER}@${SSH_HOST} ${BASE_DIR}/k8s.sh acquire -v "1.27.4")
 
 if [ -z "$C_NAME" ]; then
@@ -112,7 +112,7 @@ then
     install_contour &> /dev/null
 elif [[ ${CI_JOB} =~ eventing-* ]]
 then
-    create_registry_secrets_in_eventing &> /dev/null
+    echo ""
 elif [[ ${CI_JOB} =~ contour-* || ${CI_JOB} =~ kourier-* ]]
 then
     create_registry_secrets_in_serving &> /dev/null

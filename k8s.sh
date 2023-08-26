@@ -85,7 +85,7 @@ function acquire_cluster(){
                 date > $state_file
                 acquired=true
                 cluster_name=$dir
-                cat $kubeconfig_file
+                #cat $kubeconfig_file
                 break
             fi
         done
