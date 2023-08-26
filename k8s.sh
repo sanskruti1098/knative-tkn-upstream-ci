@@ -65,15 +65,15 @@ function acquire_cluster(){
 
             [ -d "${cluster_dir}" ] || continue # if not a directory, skip
 
-            if [[ ! -f $state_file ]]; then
-              echo ""
-            fi
-            if [[ -f $version_file ]]; then
-              echo ""
-            fi
-            if [[ -f $kubeconfig_file ]]; then
-              echo ""
-            fi
+            # if [[ ! -f $state_file ]]; then
+            #   echo ""
+            # fi
+            # if [[ -f $version_file ]]; then
+            #   echo ""
+            # fi
+            # if [[ -f $kubeconfig_file ]]; then
+            #   echo ""
+            # fi
             #echo $CLUSTER_VERSION
             #echo $(cat $version_file)
             # TODO: add check for tagged cluster(clusters specially created for certain jobs)
