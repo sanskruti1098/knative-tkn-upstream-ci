@@ -1,10 +1,6 @@
 #!/bin/bash
 
-#SCRIPT_PATH=$(readlink -f "${BASH_SOURCE:-$0}")
-#SCRIPT_DIR=$(dirname $SCRIPT_PATH)
 SCRIPT_LOCK="/tmp/.k8s.lock"
-
-DEFAULT_CLUSTER_VERSION="1.26.7"
 CLUSTER_POOL_DIR="/root/cluster-pool/pool/k8s"
 
 # stdout is used to print kubeconfig file
@@ -41,62 +37,37 @@ EOF
 # Critical section, should run with lock.
 # https://jdimpson.livejournal.com/5685.html?
 function acquire_cluster(){
-    #echo_status "Acquiring lock...."
+
     exec 8>$SCRIPT_LOCK
 
     if flock --timeout 60 -x 8; then
-        #echo_status "Lock acquired."
-        #echo_status "Acquiring cluster...."
-
+        
         local acquired=false
         local cluster_name=""
 
         for dir in $(ls ${CLUSTER_POOL_DIR}); do
-            #echo $dir
+           
             local cluster_dir="${CLUSTER_POOL_DIR}/${dir}"
-            #echo $cluster_dir
             local state_file="${cluster_dir}/.state/ACQUIRED"
-            #echo $state_file
             local kubeconfig_file="${cluster_dir}/kubeconfig"
-            #echo $kubeconfig_file
             local version_file="${cluster_dir}/.state/VERSION"
-            #echo $version_file
-
 
             [ -d "${cluster_dir}" ] || continue # if not a directory, skip
 
-            # if [[ ! -f $state_file ]]; then
-            #   echo ""
-            # fi
-            # if [[ -f $version_file ]]; then
-            #   echo ""
-            # fi
-            # if [[ -f $kubeconfig_file ]]; then
-            #   echo ""
-            # fi
-            #echo $CLUSTER_VERSION
-            #echo $(cat $version_file)
             # TODO: add check for tagged cluster(clusters specially created for certain jobs)
             if [[ ! -f $state_file && -f $version_file && -f $kubeconfig_file ]]; then
-                #echo "inside for loop"
-                # check for cluster version
-                # [ $CLUSTER_VERSION == $(cat $version_file) ] || continue
-
+              
                 date > $state_file
                 acquired=true
                 cluster_name=$dir
-                #cat $kubeconfig_file
                 break
             fi
         done
 
         if $acquired; then
             echo "$cluster_name"
-            #echo_status "Lock released."
             exit 0
         else
-            #echo_status "No clusters available. Please try after some time."
-            #echo_status "Lock released."
             exit 1
         fi
 
@@ -159,7 +130,6 @@ function main(){
 
     [[ -z "$action" ]] && help
 
-    #CLUSTER_VERSION="${version:-"$DEFAULT_CLUSTER_VERSION"}"
     CLUSTER_NAME="$name"
 
     case "$action" in
@@ -169,4 +139,3 @@ function main(){
     esac
 }
 
-main "$@"
