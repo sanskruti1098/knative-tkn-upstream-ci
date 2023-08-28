@@ -67,7 +67,6 @@ fi
 
 echo "Setting up access to k8s cluster...."
 # copy access files
-scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${K8S_POOL_DIR}/${C_NAME}/config.json /tmp
 scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${K8S_POOL_DIR}/${C_NAME}/kubeconfig /tmp
 
 # setup docker access
