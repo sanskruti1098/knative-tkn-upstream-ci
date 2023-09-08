@@ -42,7 +42,7 @@ install_contour(){
 
 BASE_DIR=/opt/knative-upstream-ci
 K8S_POOL_DIR="/root/cluster-pool/pool/k8s"
-
+K8S_AUTOMN_DIR=/root/k8s-ansible-automation
 SSH_USER=root
 SSH_HOST="a9367076.nip.io"
 SSH_ARGS="-i /opt/cluster/knative-ssh -o MACs=hmac-sha2-256 -o StrictHostKeyChecking=no -o LogLevel=ERROR -o UserKnownHostsFile=/dev/null"
@@ -55,19 +55,33 @@ then
 fi
 
 ## Fetches the cluster available from the remote power machines
-echo "Acquiring k8s cluster...."
+echo "Finding available VM for k8s cluster creation...."
 C_NAME=$(ssh ${SSH_ARGS} ${SSH_USER}@${SSH_HOST} ${BASE_DIR}/k8s.sh acquire -v "1.27.4")
 
 if [ -z "$C_NAME" ]; then
-    echo "No clusters available."
+    echo "No VMs available now."
     exit 1
 else
-    echo "${C_NAME} Acquired successfully"
+    if [ "$C_NAME" = "k8s-4109eb" ]; then
+        VM_IP="169.54.113.62"
+    elif [ "$C_NAME" = "k8s-0ec6f9" ]; then
+        VM_IP="169.54.122.204"
+    fi
+fi
+
+echo "Creating k8s cluster...."
+ssh ${SSH_ARGS} ${SSH_USER}@${VM_IP} ${K8S_AUTOMN_DIR}/create-cluster.sh
+
+if [ $? != 0 ]
+then
+    echo "Cluster creation failed."
+    exit 1
 fi
 
 echo "Setting up access to k8s cluster...."
 # copy access files
-scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${K8S_POOL_DIR}/${C_NAME}/kubeconfig /tmp
+scp ${SSH_ARGS} ${SSH_USER}@${VM_IP}:${K8S_AUTOMN_DIR}/share/kubeconfig /tmp
+#scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${K8S_POOL_DIR}/${C_NAME}/kubeconfig /tmp
 scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/"${C_NAME}"/config.json /tmp
 
 # setup docker access
