@@ -19,7 +19,7 @@ install_contour(){
 
     echo "Contour is being installed..."
    
-    envoy_replacement=registry.apps.a9367076.nip.io/maistra/envoy:v2.2
+    envoy_replacement=na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/maistra/envoy:v2.2
     ISTIO_RELEASE=knative-v1.0.0
 
      # install istio-crds
@@ -60,6 +60,7 @@ C_NAME=$(ssh ${SSH_ARGS} ${SSH_USER}@${SSH_HOST} ${BASE_DIR}/k8s.sh acquire -v "
 
 if [ -z "$C_NAME" ]; then
     echo "No VMs available now."
+
     exit 1
 else
     if [ "$C_NAME" = "k8s-4109eb" ]; then
@@ -75,6 +76,8 @@ ssh ${SSH_ARGS} ${SSH_USER}@${VM_IP} ${K8S_AUTOMN_DIR}/create-cluster.sh
 if [ $? != 0 ]
 then
     echo "Cluster creation failed."
+    kubectl get cm vcm-script -n default -o jsonpath='{.data.script}' > release.sh && chmod +x release.sh
+    bash release.sh ${C_NAME}
     exit 1
 fi
 
@@ -84,6 +87,10 @@ scp ${SSH_ARGS} ${SSH_USER}@${VM_IP}:${K8S_AUTOMN_DIR}/share/kubeconfig /tmp
 #scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${K8S_POOL_DIR}/${C_NAME}/kubeconfig /tmp
 scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/"${C_NAME}"/config.json /tmp
 
+
+scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/script /tmp
+scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/knativessh /tmp
+
 # setup docker access
 mkdir -p $HOME/.docker/
 cp /tmp/config.json $HOME/.docker/
@@ -91,6 +98,10 @@ cp /tmp/config.json $HOME/.docker/
 # setup k8s access
 mkdir -p $HOME/.kube/
 mv /tmp/kubeconfig $HOME/.kube/config
+
+kubectl create cm vcm-ssh-key -n default --from-file=/tmp/knativessh
+kubectl create cm vcm-script -n default --from-file=/tmp/script
+
 
 curl --connect-timeout 10 --retry 5 -sL https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml | sed '/.*--metric-resolution.*/a\        - --kubelet-insecure-tls' | kubectl apply -f -
 
