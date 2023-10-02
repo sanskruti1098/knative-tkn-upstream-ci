@@ -316,10 +316,10 @@ $ docker run --rm openzipkin/zipkin:test
 ## Tag and push image for knative tests
 
 ```bash
-$ docker tag openzipkin/zipkin:test  registry.ppc64le/openzipkin/zipkin:test
+$ docker tag openzipkin/zipkin:test  registry.apps.a9367076.nip.io/openzipkin/zipkin:test
 
-$ docker push registry.ppc64le/openzipkin/zipkin:test
-The push refers to repository [registry.ppc64le/openzipkin/zipkin]
+$ docker push registry.apps.a9367076.nip.io/openzipkin/zipkin:test
+The push refers to repository [registry.apps.a9367076.nip.io/openzipkin/zipkin]
 d3947bcd28de: Layer already exists
 075e34a2d12d: Layer already exists
 f76880394781: Layer already exists

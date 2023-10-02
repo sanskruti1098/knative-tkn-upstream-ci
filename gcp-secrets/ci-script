@@ -15,20 +15,21 @@ fi
 export CI_JOB=${1}
 
 # Public IP of bastion node in PowerVS
-BASTION_IP="169.48.22.244"
+BASTION_IP="169.54.112.118"
 
 # add host entires
-echo "${BASTION_IP} cluster.ppc64le registry.ppc64le ppc64le" >> /etc/hosts
+#echo "${BASTION_IP} cluster.ppc64le registry.apps.a9367076.nip.io ppc64le" >> /etc/hosts
 
 #copy env setup script
-scp -i /opt/cluster/knative-ssh -o MACs=hmac-sha2-256 -o StrictHostKeyChecking=no -oLogLevel=ERROR -o UserKnownHostsFile=/dev/null root@cluster.ppc64le:/opt/knative-upstream-ci/setup-environment.sh /tmp
+scp -i /opt/cluster/knative-ssh -o MACs=hmac-sha2-256 -o StrictHostKeyChecking=no -oLogLevel=ERROR -o UserKnownHostsFile=/dev/null root@a9367076.nip.io:/opt/knative-upstream-ci/setup-environment.sh /tmp
+scp -i /opt/cluster/knative-ssh -o MACs=hmac-sha2-256 -o StrictHostKeyChecking=no -oLogLevel=ERROR -o UserKnownHostsFile=/dev/null root@a9367076.nip.io:/opt/knative-upstream-ci/k8s.sh /tmp
 
 if [ ! -f /tmp/setup-environment.sh ]
 then
     echo "Couldn't fetch file from remote machine...."
     exit 1
 fi
-
-#run env setup script
+echo ${2}
+# #run env setup script
 chmod +x /tmp/setup-environment.sh
-. /tmp/setup-environment.sh
+. /tmp/setup-environment.sh ${2}

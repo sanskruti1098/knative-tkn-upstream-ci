@@ -139,7 +139,7 @@ Below configurations are for eventing main branch tests on power which are added
   +      - name: PLATFORM
   +        value: linux/ppc64le
   +      - name: KO_DOCKER_REPO
-  +        value: registry.ppc64le
+  +        value: registry.apps.a9367076.nip.io
   +      - name: DISABLE_MD_LINTING
   +        value: "1"
   +      - name: KUBECONFIG

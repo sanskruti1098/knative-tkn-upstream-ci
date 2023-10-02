@@ -8,13 +8,13 @@
 3. Verify private image registry is working as expected
     ```bash
     # check if registry is responding to curl
-    $ curl registry.ppc64le/v2/_catalog --insecure
+    $ curl registry.apps.a9367076.nip.io/v2/_catalog --insecure
 
     # verify a push(use any image)
-    $ docker push registry.ppc64le/openzipkin/zipkin:test
+    $ docker push registry.apps.a9367076.nip.io/openzipkin/zipkin:test
 
     # verify a pull(use any image)
-    $ docker pull registry.ppc64le/openzipkin/zipkin:test
+    $ docker pull registry.apps.a9367076.nip.io/openzipkin/zipkin:test
     ```
     
 4. Verify k8s automation is working as expected.
