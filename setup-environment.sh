@@ -54,45 +54,40 @@ then
     exit 1
 fi
 
-#CI_JOB=${1}
 
-## Fetches the cluster available from the remote power machines
-echo "Finding available VM for k8s cluster creation...."
-C_NAME=${1}
-echo ${C_NAME}
-#C_NAME=$(ssh ${SSH_ARGS} ${SSH_USER}@${SSH_HOST} ${BASE_DIR}/k8s.sh acquire -v "1.27.4")
+## Fetches the IP address of the bastion node on which the cluster will be created
+echo "Finding available bastion node for k8s cluster creation...."
+BASTION_IP=${1}
 
-if [ -z ${C_NAME} ]; then
-    echo "No VMs available now."
-
+if [ -z ${BASTION_IP} ]; then
+    echo "Bastion nodes are currently acquired and are not available now."
     exit 1
 else
-    if [ ${C_NAME} = "a936713e.nip.io" ]; then
-        V_NAME="k8s-4109eb"
-        VM_IP="169.54.113.62"
-    elif [ ${C_NAME} = "a9367acc.nip.io" ]; then
-        VM_IP="169.54.122.204"
-        V_NAME="k8s-0ec6f9"
+    if [ ${BASTION_IP} = "a936713e.nip.io" ]; then
+        C_NAME="k8s-4109eb"
+        echo "Bastion node with the following IP acquired ${BASTION_IP} successfully ."
+    elif [ ${BASTION_IP} = "a9367acc.nip.io" ]; then
+        C_NAME="k8s-0ec6f9"
+        echo "Bastion node with the following IP acquired ${BASTION_IP} successfully ."
     fi
 fi
 
 echo "Creating k8s cluster...."
-ssh ${SSH_ARGS} ${SSH_USER}@${VM_IP} ${K8S_AUTOMN_DIR}/create-cluster.sh
+ssh ${SSH_ARGS} ${SSH_USER}@${BASTION_IP} ${K8S_AUTOMN_DIR}/create-cluster.sh
 
 if [ $? != 0 ]
 then
     echo "Cluster creation failed."
     kubectl get cm vcm-script -n default -o jsonpath='{.data.script}' > release.sh && chmod +x release.sh
-    bash release.sh ${V_NAME}
+    bash release.sh ${C_NAME}
     exit 1
 fi
 
 echo "Setting up access to k8s cluster...."
 # copy access files
-scp ${SSH_ARGS} ${SSH_USER}@${VM_IP}:${K8S_AUTOMN_DIR}/share/kubeconfig /tmp
-#scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${K8S_POOL_DIR}/${V_NAME}/kubeconfig /tmp
-scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/"${V_NAME}"/config.json /tmp
-scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/"${V_NAME}"/ssl.crt /tmp
+scp ${SSH_ARGS} ${SSH_USER}@${BASTION_IP}:${K8S_AUTOMN_DIR}/share/kubeconfig /tmp
+scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/"${C_NAME}"/config.json /tmp
+scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/"${C_NAME}"/ssl.crt /tmp
 
 scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/script /tmp
 scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/knativessh /tmp
@@ -149,4 +144,4 @@ fi
 ## $CI_JOB needs to be set in knative upstream job configurations
 
 chmod +x /tmp/adjust.sh
-. /tmp/adjust.sh ${V_NAME}
+. /tmp/adjust.sh ${C_NAME}
