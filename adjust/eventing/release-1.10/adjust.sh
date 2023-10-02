@@ -12,6 +12,6 @@ echo "Use ppc64le supported zipkin image"
 sed -i "s|image:.*|image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/openzipkin/zipkin:test|g" test/config/monitoring/monitoring.yaml
 sed -i "/^success.*/i .\/destroy.sh $1" test/e2e-rekt-tests.sh
 sed -i "/^success.*/i .\/destroy.sh $1" test/e2e-tests.sh
-sed -i '/.*dump_cluster_state().*/a\  .\/destroy.sh' vendor/knative.dev/hack/infra-library.sh
+sed -i "/.*dump_cluster_state().*/a\  .\/destroy.sh $1" vendor/knative.dev/hack/infra-library.sh
 kubectl get cm vcm-script -n default -o jsonpath='{.data.script}' > destroy.sh && chmod +x destroy.sh
 echo "Source code patched successfully"
