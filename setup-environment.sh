@@ -18,7 +18,7 @@ install_contour(){
     chmod +x /tmp/yq_linux_amd64
 
     echo "Contour is being installed..."
-   
+
     envoy_replacement=na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/maistra/envoy:v2.2
     ISTIO_RELEASE=knative-v1.0.0
 
@@ -65,10 +65,10 @@ if [ -z ${BASTION_IP} ]; then
 else
     if [ ${BASTION_IP} = "a936713e.nip.io" ]; then
         C_NAME="k8s-4109eb"
-        echo "Bastion node with the following IP acquired ${BASTION_IP} successfully ."
+        echo "Bastion node with the following IP ${BASTION_IP} acquired successfully ."
     elif [ ${BASTION_IP} = "a9367acc.nip.io" ]; then
         C_NAME="k8s-0ec6f9"
-        echo "Bastion node with the following IP acquired ${BASTION_IP} successfully ."
+        echo "Bastion node with the following IP ${BASTION_IP} acquired successfully ."
     fi
 fi
 
@@ -91,6 +91,7 @@ scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/"${C_NAME}"/
 
 scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/script /tmp
 scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/knativessh /tmp
+scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/knpluginpatch /tmp
 
 # setup docker access
 mkdir -p $HOME/.docker/
@@ -102,7 +103,7 @@ mv /tmp/kubeconfig $HOME/.kube/config
 
 kubectl create cm vcm-ssh-key -n default --from-file=/tmp/knativessh
 kubectl create cm vcm-script -n default --from-file=/tmp/script
-
+kubectl create cm kn-main-patch -n default --from-file=/tmp/knpluginpatch
 
 curl --connect-timeout 10 --retry 5 -sL https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml | sed '/.*--metric-resolution.*/a\        - --kubelet-insecure-tls' | kubectl apply -f -
 
@@ -127,6 +128,7 @@ echo 'Cluster setup successfully'
 echo 'Patching source code with ppc64le specific changes....'
 KNATIVE_COMPONENT=$(echo ${CI_JOB} | cut -d '-' -f1)
 RELEASE=$(echo ${CI_JOB} | cut -d '-' -f2-)
+K_BRANCH_NAME=$(echo ${CI_JOB} | rev | cut -d'-' -f1 | rev)
 
 if [[ ${CI_JOB} =~ contour-* || ${CI_JOB} =~ kourier-* ]]
 then
@@ -134,6 +136,29 @@ then
 elif [[ ${CI_JOB} =~ eventing_rekt-* ]]
 then
     scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/main/* /tmp/
+elif [[ ${CI_JOB} =~ eventing_kafka-broker-* ]]
+then
+    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing_kafka_broker/${K_BRANCH_NAME}/* /tmp/
+    if [[ ${K_BRANCH_NAME} = "main" ]]
+    then
+        scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch /tmp
+        kubectl create cm kb-patch -n default --from-file=/tmp/kbpatch
+
+    elif [[ ${K_BRANCH_NAME} = "111" ]]
+    then
+        scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch111 /tmp
+        kubectl create cm kb-patch111 -n default --from-file=/tmp/kbpatch111
+
+    elif [[ ${K_BRANCH_NAME} = "110" ]]
+    then
+        scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch110 /tmp
+        kubectl create cm kb-patch110 -n default --from-file=/tmp/kbpatch110
+    elif [[ ${K_BRANCH_NAME} = "19" ]]
+    then
+        scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch19 /tmp
+        kubectl create cm kb-patch19 -n default --from-file=/tmp/kbpatch19
+    fi
+
 else
     scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/${KNATIVE_COMPONENT}/${RELEASE}/* /tmp/
 fi
