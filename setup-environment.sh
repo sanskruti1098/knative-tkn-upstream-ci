@@ -59,7 +59,7 @@ fi
 echo "Finding available bastion node for k8s cluster creation...."
 BASTION_IP=${1}
 
-if [ -z ${BASTION_IP} ]; then
+if [ -z "${BASTION_IP}" ] || [ "${BASTION_IP}" = "unavailable" ]; then
     echo "Bastion nodes are currently acquired and are not available now."
     exit 1
 else
