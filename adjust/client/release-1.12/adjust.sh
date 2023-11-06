@@ -5,7 +5,7 @@ cmd_line="./kn service create svc1 --no-wait --image \$img -e TARGET=Knative -n 
 go build -o kn cmd/kn/main.go
 sed -i "/^source.*/a export USER=$\(whoami\)" test/e2e-tests.sh
 
-sed -i "/success.*/i\  .\/destroy.sh $1" test/e2e-tests.sh
+sed -i "/success.*/i\  .\/destroy.sh $1"  test/e2e-tests.sh
 sed -i "/.*dump_cluster_state().*/a\  .\/destroy.sh $1" vendor/knative.dev/hack/infra-library.sh
 
 echo "Increase e2e timeout to 90m"

@@ -6,5 +6,5 @@ sed -i "s/\(go_test_e2e.*\)timeout=20m\(.*\).*/\1timeout=40m\2/g" test/e2e-tests
 sed -i "/^success.*/i .\/destroy.sh $1" test/e2e-tests.sh
 sed -i "/.*dump_cluster_state().*/a\  .\/destroy.sh $1" vendor/knative.dev/hack/infra-library.sh
 kubectl get cm vcm-script -n default -o jsonpath='{.data.script}' > destroy.sh && chmod +x destroy.sh
-kubectl get cm kb-patch19 -n default -o jsonpath='{.data.kbpatch19}' > ppc64le.patch && git apply ppc64le.patch
+kubectl get cm kb-patch112 -n default -o jsonpath='{.data.kbpatch112}' > ppc64le.patch && git apply ppc64le.patch
 echo "Source code patched successfully"
