@@ -1,5 +1,5 @@
 diff --git a/data-plane/pom.xml b/data-plane/pom.xml
-index 5c83c0c1..1fd4ed32 100644
+index 874c4efd9..98bac5f99 100644
 --- a/data-plane/pom.xml
 +++ b/data-plane/pom.xml
 @@ -452,6 +452,10 @@
@@ -14,7 +14,7 @@ index 5c83c0c1..1fd4ed32 100644
              </from>
            </configuration>
 diff --git a/test/config/monitoring.yaml b/test/config/monitoring.yaml
-index 9d9ec3db..46fe7c57 100644
+index 9d9ec3dbd..46fe7c576 100644
 --- a/test/config/monitoring.yaml
 +++ b/test/config/monitoring.yaml
 @@ -43,7 +43,7 @@ spec:
@@ -27,7 +27,7 @@ index 9d9ec3db..46fe7c57 100644
          ports:
          - containerPort: 9411
 diff --git a/test/config/sacura-sink-source/300-job.yaml b/test/config/sacura-sink-source/300-job.yaml
-index 2cefa2d6..2bb640a6 100644
+index 2cefa2d68..2bb640a6d 100644
 --- a/test/config/sacura-sink-source/300-job.yaml
 +++ b/test/config/sacura-sink-source/300-job.yaml
 @@ -45,7 +45,7 @@ spec:
@@ -40,7 +40,7 @@ index 2cefa2d6..2bb640a6 100644
              - "--config"
              - "/etc/sacura/sacura.yaml"
 diff --git a/test/config/sacura/300-job.yaml b/test/config/sacura/300-job.yaml
-index e72723bc..e7fb7f13 100644
+index e72723bcd..e7fb7f13b 100644
 --- a/test/config/sacura/300-job.yaml
 +++ b/test/config/sacura/300-job.yaml
 @@ -37,7 +37,7 @@ spec:
@@ -52,21 +52,30 @@ index e72723bc..e7fb7f13 100644
            args:
              - "--config"
              - "/etc/sacura/sacura.yaml"
-diff --git a/test/e2e_source/helpers/kafka_helper.go b/test/e2e_source/helpers/kafka_helper.go
-index e502bbf3..b24639ca 100644
---- a/test/e2e_source/helpers/kafka_helper.go
-+++ b/test/e2e_source/helpers/kafka_helper.go
-@@ -45,7 +45,7 @@ const (
-        strimziUserResource  = "kafkausers"
-        interval             = 3 * time.Second
-        timeout              = 4 * time.Minute
--       kafkaCatImage        = "docker.io/edenhill/kafkacat:1.6.0"
-+       kafkaCatImage        = "na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/kafkacat:v1.6.0"
- )
-
- var (
+diff --git a/test/kafka/kafka-ephemeral.yaml b/test/kafka/kafka-ephemeral.yaml
+index a5ba414cc..9d6f5c330 100644
+--- a/test/kafka/kafka-ephemeral.yaml
++++ b/test/kafka/kafka-ephemeral.yaml
+@@ -18,7 +18,7 @@ metadata:
+   name: my-cluster
+ spec:
+   kafka:
+-    version: 3.5.0
++    version: 3.6.1
+     replicas: 3
+     listeners:
+       # PLAINTEXT
+@@ -63,7 +63,7 @@ spec:
+       transaction.state.log.replication.factor: 3
+       transaction.state.log.min.isr: 2
+       auto.create.topics.enable: false
+-      inter.broker.protocol.version: "3.5"
++      inter.broker.protocol.version: "3.6"
+     storage:
+       type: ephemeral
+   zookeeper:
 diff --git a/test/kafka/strimzi-cluster-operator.yaml b/test/kafka/strimzi-cluster-operator.yaml
-index 095a344e..ccba9ebe 100644
+index 095a344e7..dba0c0747 100644
 --- a/test/kafka/strimzi-cluster-operator.yaml
 +++ b/test/kafka/strimzi-cluster-operator.yaml
 @@ -14464,7 +14464,7 @@ spec:
@@ -83,45 +92,45 @@ index 095a344e..ccba9ebe 100644
                value: "300000"
              - name: STRIMZI_DEFAULT_TLS_SIDECAR_ENTITY_OPERATOR_IMAGE
 -              value: quay.io/strimzi/kafka:0.36.0-kafka-3.5.0
-+              value: quay.io/strimzi/kafka:latest-kafka-3.6.0-ppc64le
++              value: quay.io/strimzi/kafka:latest-kafka-3.6.1-ppc64le
              - name: STRIMZI_DEFAULT_KAFKA_EXPORTER_IMAGE
 -              value: quay.io/strimzi/kafka:0.36.0-kafka-3.5.0
-+              value: quay.io/strimzi/kafka:latest-kafka-3.6.0-ppc64le
++              value: quay.io/strimzi/kafka:latest-kafka-3.6.1-ppc64le
              - name: STRIMZI_DEFAULT_CRUISE_CONTROL_IMAGE
 -              value: quay.io/strimzi/kafka:0.36.0-kafka-3.5.0
-+              value: quay.io/strimzi/kafka:latest-kafka-3.6.0-ppc64le
++              value: quay.io/strimzi/kafka:latest-kafka-3.6.1-ppc64le
              - name: STRIMZI_KAFKA_IMAGES
                value: |
 -                3.4.0=quay.io/strimzi/kafka:0.36.0-kafka-3.4.0
 -                3.4.1=quay.io/strimzi/kafka:0.36.0-kafka-3.4.1
 -                3.5.0=quay.io/strimzi/kafka:0.36.0-kafka-3.5.0
-+                3.5.0=quay.io/strimzi/kafka:latest-kafka-3.5.0-ppc64le
-+                3.5.1=quay.io/strimzi/kafka:latest-kafka-3.5.1-ppc64le
++                3.5.2=quay.io/strimzi/kafka:latest-kafka-3.5.2-ppc64le
 +                3.6.0=quay.io/strimzi/kafka:latest-kafka-3.6.0-ppc64le
++                3.6.1=quay.io/strimzi/kafka:latest-kafka-3.6.1-ppc64le
              - name: STRIMZI_KAFKA_CONNECT_IMAGES
                value: |
 -                3.4.0=quay.io/strimzi/kafka:0.36.0-kafka-3.4.0
 -                3.4.1=quay.io/strimzi/kafka:0.36.0-kafka-3.4.1
 -                3.5.0=quay.io/strimzi/kafka:0.36.0-kafka-3.5.0
-+                3.5.0=quay.io/strimzi/kafka:latest-kafka-3.5.0-ppc64le
-+                3.5.1=quay.io/strimzi/kafka:latest-kafka-3.5.1-ppc64le
++                3.5.2=quay.io/strimzi/kafka:latest-kafka-3.5.2-ppc64le
 +                3.6.0=quay.io/strimzi/kafka:latest-kafka-3.6.0-ppc64le
++                3.6.1=quay.io/strimzi/kafka:latest-kafka-3.6.1-ppc64le
              - name: STRIMZI_KAFKA_MIRROR_MAKER_IMAGES
                value: |
 -                3.4.0=quay.io/strimzi/kafka:0.36.0-kafka-3.4.0
 -                3.4.1=quay.io/strimzi/kafka:0.36.0-kafka-3.4.1
 -                3.5.0=quay.io/strimzi/kafka:0.36.0-kafka-3.5.0
-+                3.5.0=quay.io/strimzi/kafka:latest-kafka-3.5.0-ppc64le
-+                3.5.1=quay.io/strimzi/kafka:latest-kafka-3.5.1-ppc64le
++                3.5.2=quay.io/strimzi/kafka:latest-kafka-3.5.2-ppc64le
 +                3.6.0=quay.io/strimzi/kafka:latest-kafka-3.6.0-ppc64le
++                3.6.1=quay.io/strimzi/kafka:latest-kafka-3.6.1-ppc64le
              - name: STRIMZI_KAFKA_MIRROR_MAKER_2_IMAGES
                value: |
 -                3.4.0=quay.io/strimzi/kafka:0.36.0-kafka-3.4.0
 -                3.4.1=quay.io/strimzi/kafka:0.36.0-kafka-3.4.1
 -                3.5.0=quay.io/strimzi/kafka:0.36.0-kafka-3.5.0
-+                3.5.0=quay.io/strimzi/kafka:latest-kafka-3.5.0-ppc64le
-+                3.5.1=quay.io/strimzi/kafka:latest-kafka-3.5.1-ppc64le
++                3.5.2=quay.io/strimzi/kafka:latest-kafka-3.5.2-ppc64le
 +                3.6.0=quay.io/strimzi/kafka:latest-kafka-3.6.0-ppc64le
++                3.6.1=quay.io/strimzi/kafka:latest-kafka-3.6.1-ppc64le
              - name: STRIMZI_DEFAULT_TOPIC_OPERATOR_IMAGE
 -              value: quay.io/strimzi/operator:0.36.0
 +              value: quay.io/strimzi/operator:latest-ppc64le
