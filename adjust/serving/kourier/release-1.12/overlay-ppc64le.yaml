@@ -53,4 +53,4 @@ spec:
     spec:
       containers:
         #@overlay/match by=overlay.index(0)
-      - image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/envoyproxy/envoy:v1.22.6
+      - image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/maistra/envoy:v2.4

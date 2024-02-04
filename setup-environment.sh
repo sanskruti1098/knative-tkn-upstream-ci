@@ -44,7 +44,7 @@ BASE_DIR=/opt/knative-upstream-ci
 K8S_POOL_DIR="/root/cluster-pool/pool/k8s"
 K8S_AUTOMN_DIR=/root/k8s-ansible-automation
 SSH_USER=root
-SSH_HOST="a9367076.nip.io"
+SSH_HOST="130.198.103.76"
 SSH_ARGS="-i /opt/cluster/knative-ssh -o MACs=hmac-sha2-256 -o StrictHostKeyChecking=no -o LogLevel=ERROR -o UserKnownHostsFile=/dev/null"
 
 # exit if CI_JOB is not set
@@ -63,11 +63,11 @@ if [ -z "${BASTION_IP}" ] || [ "${BASTION_IP}" = "unavailable" ]; then
     echo "Bastion nodes are currently acquired and are not available now."
     exit 1
 else
-    if [ ${BASTION_IP} = "a936713e.nip.io" ]; then
-        C_NAME="k8s-4109eb"
+    if [ ${BASTION_IP} = "80a8657d.nip.io" ]; then
+        C_NAME="k8s-7b88a7"
         echo "Bastion node with the following IP ${BASTION_IP} acquired successfully ."
-    elif [ ${BASTION_IP} = "a9367acc.nip.io" ]; then
-        C_NAME="k8s-0ec6f9"
+    elif [ ${BASTION_IP} = "80a86595.nip.io" ]; then
+        C_NAME="k8s-4d853a"
         echo "Bastion node with the following IP ${BASTION_IP} acquired successfully ."
     fi
 fi
@@ -157,6 +157,10 @@ then
     then
         scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch112 /tmp
         kubectl create cm kb-patch112 -n default --from-file=/tmp/kbpatch112
+    elif [[ ${K_BRANCH_NAME} = "113" ]]
+    then
+        scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch113 /tmp
+        kubectl create cm kb-patch113 -n default --from-file=/tmp/kbpatch113
     fi
 
 else
