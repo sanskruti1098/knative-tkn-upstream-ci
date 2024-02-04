@@ -91,7 +91,6 @@ scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/"${C_NAME}"/
 
 scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/script /tmp
 scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/knativessh /tmp
-scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/knpluginpatch /tmp
 
 # setup docker access
 mkdir -p $HOME/.docker/
@@ -103,7 +102,6 @@ mv /tmp/kubeconfig $HOME/.kube/config
 
 kubectl create cm vcm-ssh-key -n default --from-file=/tmp/knativessh
 kubectl create cm vcm-script -n default --from-file=/tmp/script
-kubectl create cm kn-main-patch -n default --from-file=/tmp/knpluginpatch
 
 curl --connect-timeout 10 --retry 5 -sL https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml | sed '/.*--metric-resolution.*/a\        - --kubelet-insecure-tls' | kubectl apply -f -
 
@@ -143,16 +141,10 @@ then
     then
         scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch /tmp
         kubectl create cm kb-patch -n default --from-file=/tmp/kbpatch
-
     elif [[ ${K_BRANCH_NAME} = "111" ]]
     then
         scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch111 /tmp
         kubectl create cm kb-patch111 -n default --from-file=/tmp/kbpatch111
-
-    elif [[ ${K_BRANCH_NAME} = "110" ]]
-    then
-        scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch110 /tmp
-        kubectl create cm kb-patch110 -n default --from-file=/tmp/kbpatch110
     elif [[ ${K_BRANCH_NAME} = "112" ]]
     then
         scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch112 /tmp
@@ -162,7 +154,6 @@ then
         scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch113 /tmp
         kubectl create cm kb-patch113 -n default --from-file=/tmp/kbpatch113
     fi
-
 else
     scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/${KNATIVE_COMPONENT}/${RELEASE}/* /tmp/
 fi
