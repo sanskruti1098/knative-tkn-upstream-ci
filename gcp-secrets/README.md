@@ -8,6 +8,7 @@ The secret structure used by our setup is as below
 
 - `knative-ssh`: key to access remote ppc64le cluster
 - `ci-script`: script to connect and setup remote ppc64le environment
+- `vm-script` : script to find the available VMs to install the cluster on
 
 Refer RTC [Task 148096](https://jazz06.rchland.ibm.com:12443/jazz/web/projects/Power%20Ecosystem#action=com.ibm.team.workitem.viewWorkItem&id=148096) for details on how secret is added into the GCP project.
 
@@ -15,7 +16,7 @@ To enable knative prow server to pull secrets from our GCP project, we need to p
 
 # Update a secret in GCP secret manager
 
-Ask Siddhesh Ghadi or Md.afsan Hossain for GCP access credentials.  
+Ask Md.afsan Hossain or Valen Mascarenhas for GCP access credentials.  
 Ensure that files have [linux line endings](https://stackoverflow.com/a/34376951) if using windows to push them to GCP.
 
 ```bash

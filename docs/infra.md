@@ -2,21 +2,25 @@
 
 ### VM Details
 
-All below vms are created in `oss-community-resources-toronto` PowerVS in `2046434 - IBM Ecosystem CICD` IBM Cloud account.
-The bastion vm has public ip, rest all vms are part of private network `ocp-net` and access internet via bastion using SNAT.
+All below vms are created in `rdr-ghatwala-tekton-knativeCI-PROD-Tok04` PowerVS in `2046434 - IBM Ecosystem CICD` IBM Cloud account.
+The bastion vm has public ip, rest all vms are part of private network `knative-tekton-private-network` and access internet via bastion using SNAT.
 
 |Name|OS|CPU|Ram|Disk|Public IP|Private IP|Network Subnet|
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|knative-bastion-siddhesh-ghadi|RHEL 8.5|0.5|16|120|169.48.22.244|192.168.143.244, 192.168.25.200|tekton-pub-network, ocp-net|
-|knative-master-siddhesh-ghadi|RHEL 8.5|0.5|16|120|-|192.168.25.201|ocp-net|
-|knative-worker1-siddhesh-ghadi|RHEL 8.5|0.75|24|120|-|192.168.25.202|ocp-net|
-|knative-worker2-siddhesh-ghadi|RHEL 8.5|0.75|24|120|-|192.168.25.203|ocp-net|
+|k8s-7b88a7-bastion-1|CentOS-Stream-8|0.5|16|120|128.168.101.149|192.168.187.149, 192.168.25.52|k8s-f1c4bc-public-network, knative-tekton-private-network|
+|k8s-7b88a7-master-1|CentOS-Stream-8|0.5|16|120|-|192.168.25.19|knative-tekton-private-network|
+|k8s-7b88a7-worker-1|CentOS-Stream-8|1|16|120|-|192.168.25.157|knative-tekton-private-network|
+|k8s-7b88a7-worker-2|CentOS-Stream-8|1|16|120|-|192.168.25.227|knative-tekton-private-network|
+|k8s-4d853a-bastion-1|CentOS-Stream-8|0.5|16|120|128.168.101.125|192.168.25.138, 192.168.187.125|k8s-4d853a-public-network, knative-tekton-private-network|
+|k8s-4d853a-master-1|CentOS-Stream-8|0.5|16|120|-|192.168.25.210|knative-tekton-private-network|
+|k8s-4d853a-worker-1|CentOS-Stream-8|1|16|120|-|192.168.25.60|knative-tekton-private-network|
+|k8s-4d853a-worker-2|CentOS-Stream-8|1|15|120|-|192.168.25.74|knative-tekton-private-network|
 
 ### Deploy VMs
 
 ```bash
 ibmcloud pi sl
-ibmcloud pi st <CRN for oss-community-resources-toronto>
+ibmcloud pi st <CRN for rdr-ghatwala-tekton-knativeCI-PROD-Tok04>
 ```
 
 Latest images can be imported into PowerVS using [PowerVS-latest-Images](https://github.ibm.com/redstack-power/docs/wiki/PowerVS-latest-Images) wiki.
@@ -54,15 +58,6 @@ ibmcloud pi instance-create knative-worker2-siddhesh-ghadi --image "rhel-85-1213
   sed -i 's/^ChallengeResponseAuthentication yes$/ChallengeResponseAuthentication no/g' /etc/ssh/sshd_config
   sed -i 's/^PasswordAuthentication yes$/PasswordAuthentication no/g' /etc/ssh/sshd_config
   systemctl reload sshd
-  ```
-
-- RHEL login and update
-
-  ```bash
-  subscription-manager register --username=<RedHat username> --password=<RedHat password> --force
-  subscription-manager refresh
-  subscription-manager attach --auto 
-  yum update -y
   ```
 
 - Setup fail to ban
@@ -189,15 +184,6 @@ Run below on all master & worker nodes. Ensure that the k8s automation is trigge
   sed -i 's/^ChallengeResponseAuthentication yes$/ChallengeResponseAuthentication no/g' /etc/ssh/sshd_config
   sed -i 's/^PasswordAuthentication yes$/PasswordAuthentication no/g' /etc/ssh/sshd_config
   systemctl reload sshd
-  ```
-
-- RHEL login and update
-
-  ```bash
-  #subscription-manager register --username=<RedHat username> --password=<RedHat password> --force
-  #subscription-manager refresh
-  #subscription-manager attach --auto 
-  yum update -y
   ```
 
 - Setup fail to ban

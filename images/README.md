@@ -1,9 +1,16 @@
-# Container image buid instructions
+# Container image for ppc64le
 
-This directory contains scripts/instructions to build required images which don't have power support and are used in knative testing. The images are expected to be available in local private registry(running on bastion) or in any public container repository. The image values are used in adjust scripts for image replacements during tests.
+This directory contains scripts/instructions to build required images which don't have power support and are used in knative testing. The images are expected to be available in JFrog registry(na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative). The image values are used in adjust scripts for image replacements during tests.
 
 
 |Image|Replacement|Used In|
 |:-:|:-:|:-:|
-|`projectcontour/contour:v1.19.1`|`registry.apps.a9367076.nip.io/contour:v1.19.1`|`serving`|
-|`ghcr.io/openzipkin/zipkin:2`|`registry.apps.a9367076.nip.io/openzipkin/zipkin:test`|`eventing`|
+|`projectcontour/contour:v1.25.0`|`na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/contour:v1.25.0`|`serving`|
+|`ghcr.io/openzipkin/zipkin:2`|`na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/openzipkin/zipkin:test`|`eventing`,`eventing-kafka-broker`|
+|`docker.io/envoyproxy/envoy:v1.28.0`|`na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/maistra/envoy:v2.4`|`eventing`,`plugin-event`|
+|`ghcr.io/pierdipi/sacura/sacura-7befbbbc92911c6727467cfbf23af88f`|`na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/bootstrap/sacura:latest`|`eventing-kafka-broker`|
+|`docker.io/edenhill/kafkacat:1.6.0`|`na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/kafkacat:v1.6.0`|`eventing-kafka-broker`|
+|`ghcr.io/kedacore/keda-admission-webhooks:2.10.1`|`na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/keda-webhook:v2.11.2`|`eventing-kafka-broker`|
+|`ghcr.io/kedacore/keda-metrics-apiserver:2.10.1`|`na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/keda-adapter:v2.11.2`|`eventing-kafka-broker`|
+|`ghcr.io/kedacore/keda:2.10.1`|`na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/keda-main:v2.11.2`|`eventing-kafka-broker`|
+|`ghcr.io/kedacore/keda:2.10.1`|`na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/keda-main:v2.11.2`|`eventing-kafka-broker`|
