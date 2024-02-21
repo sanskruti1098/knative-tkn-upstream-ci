@@ -63,13 +63,8 @@ if [ -z "${BASTION_IP}" ] || [ "${BASTION_IP}" = "unavailable" ]; then
     echo "Bastion nodes are currently acquired and are not available now."
     exit 1
 else
-    if [ ${BASTION_IP} = "80a8657d.nip.io" ]; then
-        C_NAME="k8s-7b88a7"
-        echo "Bastion node with the following IP ${BASTION_IP} acquired successfully ."
-    elif [ ${BASTION_IP} = "80a86595.nip.io" ]; then
-        C_NAME="k8s-4d853a"
-        echo "Bastion node with the following IP ${BASTION_IP} acquired successfully ."
-    fi
+    C_NAME=${BASTION_IP}
+    echo "Bastion node with the following IP ${BASTION_IP} acquired successfully ."
 fi
 
 echo "Creating k8s cluster...."
