@@ -7,7 +7,7 @@ index 9d9ec3db..46fe7c57 100644
        containers:
        - name: zipkin
 -        image: ghcr.io/openzipkin/zipkin:2
-+        image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/openzipkin/zipkin:test
++        image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/openzipkin/zipkin:test
          imagePullPolicy: IfNotPresent
          ports:
          - containerPort: 9411
@@ -20,7 +20,7 @@ index 2cefa2d6..2bb640a6 100644
        containers:
          - name: sacura
 -          image: ghcr.io/pierdipi/sacura/sacura-7befbbbc92911c6727467cfbf23af88f
-+          image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/bootstrap/sacura:latest
++          image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/bootstrap/sacura:latest
            args:
              - "--config"
              - "/etc/sacura/sacura.yaml"
@@ -33,7 +33,7 @@ index e72723bc..e7fb7f13 100644
        containers:
          - name: sacura
 -          image: ghcr.io/pierdipi/sacura/sacura-7befbbbc92911c6727467cfbf23af88f
-+          image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/bootstrap/sacura:latest
++          image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/bootstrap/sacura:latest
            args:
              - "--config"
              - "/etc/sacura/sacura.yaml"
@@ -46,7 +46,7 @@ index e502bbf3..b24639ca 100644
         interval             = 3 * time.Second
         timeout              = 4 * time.Minute
 -       kafkaCatImage        = "docker.io/edenhill/kafkacat:1.6.0"
-+       kafkaCatImage        = "na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/kafkacat:v1.6.0"
++       kafkaCatImage        = "docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/kafkacat:v1.6.0"
  )
 
  var (
@@ -59,7 +59,7 @@ index 7faed28d..031ab5aa 100644
          - name: KEDA_HTTP_DEFAULT_TIMEOUT
            value: ""
 -        image: ghcr.io/kedacore/keda-admission-webhooks:2.10.1
-+        image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/keda-webhook:v2.11.2
++        image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/keda-webhook:v2.11.2
          imagePullPolicy: Always
          livenessProbe:
            httpGet:
@@ -68,7 +68,7 @@ index 7faed28d..031ab5aa 100644
          - name: KEDA_HTTP_DEFAULT_TIMEOUT
            value: ""
 -        image: ghcr.io/kedacore/keda-metrics-apiserver:2.10.1
-+        image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/keda-adapter:v2.11.2
++        image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/keda-adapter:v2.11.2
          imagePullPolicy: Always
          livenessProbe:
            httpGet:
@@ -77,7 +77,7 @@ index 7faed28d..031ab5aa 100644
          - name: KEDA_HTTP_DEFAULT_TIMEOUT
            value: ""
 -        image: ghcr.io/kedacore/keda:2.10.1
-+        image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/keda-main:v2.11.2
++        image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/keda-main:v2.11.2
          imagePullPolicy: Always
          livenessProbe:
            httpGet:

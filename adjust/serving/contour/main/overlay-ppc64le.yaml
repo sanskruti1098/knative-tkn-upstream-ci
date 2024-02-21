@@ -66,7 +66,7 @@ spec:
     spec:
       containers:
         #@overlay/match by=overlay.index(0)
-        - image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/contour:v1.25.0
+        - image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/contour:v1.25.0
 
 #@overlay/match by=subset("Deployment", "contour", "contour-external"), expects=1
 ---
@@ -75,7 +75,7 @@ spec:
     spec:
       containers:
         #@overlay/match by=overlay.index(0)
-        - image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/contour:v1.250.0
+        - image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/contour:v1.250.0
 
 #@overlay/match by=subset("DaemonSet", "envoy", "contour-external"), expects=1
 ---
@@ -84,12 +84,12 @@ spec:
     spec:
       containers:
         #@overlay/match by=overlay.index(0)
-        - image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/contour:v1.25.0
+        - image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/contour:v1.25.0
           #@overlay/match by=overlay.index(1)
-        - image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/maistra/envoy:v2.2
+        - image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/maistra/envoy:v2.2
       initContainers:
         #@overlay/match by=overlay.index(0)
-        - image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/contour:v1.21.1
+        - image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/contour:v1.21.1
 
 #@overlay/match by=subset("Job", "contour-certgen-v1.21.1", "contour-internal"), expects=1
 ---
@@ -98,7 +98,7 @@ spec:
     spec:
       containers:
         #@overlay/match by=overlay.index(0)
-        - image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/contour:v1.25.0
+        - image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/contour:v1.25.0
 
 #@overlay/match by=subset("Deployment", "contour", "contour-internal"), expects=1
 ---
@@ -107,7 +107,7 @@ spec:
     spec:
       containers:
         #@overlay/match by=overlay.index(0)
-        - image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/contour:v1.25.0
+        - image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/contour:v1.25.0
 
 #@overlay/match by=subset("DaemonSet", "envoy", "contour-internal"), expects=1
 ---
@@ -116,9 +116,9 @@ spec:
     spec:
       containers:
         #@overlay/match by=overlay.index(0)
-        - image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/contour:v1.25.0
+        - image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/contour:v1.25.0
           #@overlay/match by=overlay.index(1)
-        - image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/maistra/envoy:v2.2
+        - image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/maistra/envoy:v2.2
       initContainers:
         #@overlay/match by=overlay.index(0)
-        - image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/contour:v1.25.0
+        - image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/contour:v1.25.0

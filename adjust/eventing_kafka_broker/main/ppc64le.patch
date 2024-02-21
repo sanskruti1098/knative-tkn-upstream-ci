@@ -7,7 +7,7 @@ index 9d9ec3dbd..46fe7c576 100644
        containers:
        - name: zipkin
 -        image: ghcr.io/openzipkin/zipkin:2
-+        image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/openzipkin/zipkin:test
++        image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/openzipkin/zipkin:test
          imagePullPolicy: IfNotPresent
          ports:
          - containerPort: 9411
@@ -16,11 +16,11 @@ index 2cefa2d68..2bb640a6d 100644
 --- a/test/config/sacura-sink-source/300-job.yaml
 +++ b/test/config/sacura-sink-source/300-job.yaml
 @@ -45,7 +45,7 @@ spec:
-
+ 
        containers:
          - name: sacura
 -          image: ghcr.io/pierdipi/sacura/sacura-7befbbbc92911c6727467cfbf23af88f
-+          image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/bootstrap/sacura:latest
++          image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/bootstrap/sacura:latest
            args:
              - "--config"
              - "/etc/sacura/sacura.yaml"
@@ -29,26 +29,26 @@ index e72723bcd..e7fb7f13b 100644
 --- a/test/config/sacura/300-job.yaml
 +++ b/test/config/sacura/300-job.yaml
 @@ -37,7 +37,7 @@ spec:
-
+ 
        containers:
          - name: sacura
 -          image: ghcr.io/pierdipi/sacura/sacura-7befbbbc92911c6727467cfbf23af88f
-+          image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/bootstrap/sacura:latest
++          image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/bootstrap/sacura:latest
            args:
              - "--config"
              - "/etc/sacura/sacura.yaml"
 diff --git a/test/e2e_source/helpers/kafka_helper.go b/test/e2e_source/helpers/kafka_helper.go
-index e502bbf3e..b24639ca4 100644
+index a565b87c6..8f82725f5 100644
 --- a/test/e2e_source/helpers/kafka_helper.go
 +++ b/test/e2e_source/helpers/kafka_helper.go
 @@ -45,7 +45,7 @@ const (
-        strimziUserResource  = "kafkausers"
-        interval             = 3 * time.Second
-        timeout              = 4 * time.Minute
--       kafkaCatImage        = "docker.io/edenhill/kafkacat:1.6.0"
-+       kafkaCatImage        = "na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/kafkacat:v1.6.0"
+ 	strimziUserResource  = "kafkausers"
+ 	interval             = 3 * time.Second
+ 	timeout              = 4 * time.Minute
+-	kcatImage            = "quay.io/openshift-knative/kcat:1.7.1"
++	kcatImage            = "docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/kafkacat:v1.6.0"
  )
-
+ 
  var (
 diff --git a/third_party/keda/keda.yaml b/third_party/keda/keda.yaml
 index 7faed28d5..031ab5aa5 100644
@@ -59,7 +59,7 @@ index 7faed28d5..031ab5aa5 100644
          - name: KEDA_HTTP_DEFAULT_TIMEOUT
            value: ""
 -        image: ghcr.io/kedacore/keda-admission-webhooks:2.10.1
-+        image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/keda-webhook:v2.11.2
++        image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/keda-webhook:v2.11.2
          imagePullPolicy: Always
          livenessProbe:
            httpGet:
@@ -68,7 +68,7 @@ index 7faed28d5..031ab5aa5 100644
          - name: KEDA_HTTP_DEFAULT_TIMEOUT
            value: ""
 -        image: ghcr.io/kedacore/keda-metrics-apiserver:2.10.1
-+        image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/keda-adapter:v2.11.2
++        image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/keda-adapter:v2.11.2
          imagePullPolicy: Always
          livenessProbe:
            httpGet:
@@ -77,8 +77,7 @@ index 7faed28d5..031ab5aa5 100644
          - name: KEDA_HTTP_DEFAULT_TIMEOUT
            value: ""
 -        image: ghcr.io/kedacore/keda:2.10.1
-+        image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/keda-main:v2.11.2
++        image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/keda-main:v2.11.2
          imagePullPolicy: Always
          livenessProbe:
            httpGet:
-

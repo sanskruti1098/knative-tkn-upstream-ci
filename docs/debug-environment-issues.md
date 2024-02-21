@@ -8,13 +8,13 @@
 3. Verify that the JFrog registry is working as expected
     ```bash
     # check if you can login to the registry
-    $ docker login na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local
+    $ docker login docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local
 
     # verify a push(use any image)
-    $ docker push na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/openzipkin/zipkin:test
+    $ docker push docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/openzipkin/zipkin:test
 
     # verify a pull(use any image)
-    $ docker pull na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/openzipkin/zipkin:test
+    $ docker pull docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/openzipkin/zipkin:test
     ```
     
 4. Verify k8s automation is working as expected.

@@ -22,7 +22,7 @@ index 9d9ec3dbd..46fe7c576 100644
        containers:
        - name: zipkin
 -        image: ghcr.io/openzipkin/zipkin:2
-+        image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/openzipkin/zipkin:test
++        image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/openzipkin/zipkin:test
          imagePullPolicy: IfNotPresent
          ports:
          - containerPort: 9411
@@ -35,7 +35,7 @@ index 2cefa2d68..2bb640a6d 100644
        containers:
          - name: sacura
 -          image: ghcr.io/pierdipi/sacura/sacura-7befbbbc92911c6727467cfbf23af88f
-+          image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/bootstrap/sacura:latest
++          image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/bootstrap/sacura:latest
            args:
              - "--config"
              - "/etc/sacura/sacura.yaml"
@@ -48,7 +48,7 @@ index e72723bcd..e7fb7f13b 100644
        containers:
          - name: sacura
 -          image: ghcr.io/pierdipi/sacura/sacura-7befbbbc92911c6727467cfbf23af88f
-+          image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/bootstrap/sacura:latest
++          image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/bootstrap/sacura:latest
            args:
              - "--config"
              - "/etc/sacura/sacura.yaml"

@@ -9,7 +9,7 @@ sed -i "s/\(go_test_e2e.*\)timeout=1h\(.*\).*/\1timeout=15m\2/g" test/e2e-tests.
 sed -i "s/\(go_test_e2e.*\)parallel=20\(.*\).*/\1parallel=1\2/g" test/e2e-tests.sh
 
 echo "Use ppc64le supported zipkin image"
-sed -i "s|image:.*|image: na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/openzipkin/zipkin:test|g" test/config/monitoring/monitoring.yaml
+sed -i "s|image:.*|image: docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/openzipkin/zipkin:test|g" test/config/monitoring/monitoring.yaml
 sed -i "/^success.*/i .\/destroy.sh $1" test/e2e-rekt-tests.sh
 sed -i "/^success.*/i .\/destroy.sh $1" test/e2e-tests.sh
 sed -i "/.*dump_cluster_state().*/a\  .\/destroy.sh $1" vendor/knative.dev/hack/infra-library.sh
