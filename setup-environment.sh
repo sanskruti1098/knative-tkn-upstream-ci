@@ -19,7 +19,7 @@ install_contour(){
 
     echo "Contour is being installed..."
 
-    envoy_replacement=docker-na.artifactory.swg-devops.com/sys-linux-power-team-ftp3distro-docker-images-docker-local/knative/maistra/envoy:v2.2
+    envoy_replacement=icr.io/upstream-k8s-registry/knative/maistra/envoy:v2.2
     ISTIO_RELEASE=knative-v1.0.0
 
      # install istio-crds
