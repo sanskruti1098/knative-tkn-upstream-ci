@@ -13,10 +13,10 @@ spec:
         - name: SSL_CERT_DIR
           value: /opt/certs
         - name: DOCKER_CONFIG
-          value: /.docker
+          value: /root/.docker
         #@overlay/match missing_ok=True
         volumeMounts:
-        - mountPath: .docker
+        - mountPath: /root/.docker
           name: registry-creds
         - mountPath: /opt/certs
           name: registry-certs
@@ -53,4 +53,4 @@ spec:
     spec:
       containers:
         #@overlay/match by=overlay.index(0)
-      - image: icr.io/upstream-k8s-registry/knative/maistra/envoy:v2.2
+      - image: icr.io/upstream-k8s-registry/knative/maistra/envoy:v2.4

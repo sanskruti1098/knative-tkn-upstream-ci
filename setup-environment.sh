@@ -19,8 +19,8 @@ install_contour(){
 
     echo "Contour is being installed..."
 
-    envoy_replacement=icr.io/upstream-k8s-registry/knative/maistra/envoy:v2.2
-    ISTIO_RELEASE=knative-v1.0.0
+    envoy_replacement=icr.io/upstream-k8s-registry/knative/maistra/envoy:v2.4
+    ISTIO_RELEASE=knative-v1.13.1
 
      # install istio-crds
     curl --connect-timeout 10 --retry 5 -sL https://github.com/knative-sandbox/net-istio/releases/download/${ISTIO_RELEASE}/istio.yaml | \
@@ -82,7 +82,7 @@ echo "Setting up access to k8s cluster...."
 # copy access files
 scp ${SSH_ARGS} ${SSH_USER}@${BASTION_IP}:${K8S_AUTOMN_DIR}/share/kubeconfig /tmp
 scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/"${C_NAME}"/config.json /tmp
-scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/"${C_NAME}"/ssl.crt /tmp
+scp ${SSH_ARGS} ${SSH_USER}@${C_NAME}:/root/k8s-ansible-automation/share/ssl.crt /tmp
 
 scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/script /tmp
 scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/knativessh /tmp
