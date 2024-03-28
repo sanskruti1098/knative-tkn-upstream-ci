@@ -7,7 +7,7 @@
                         "name":"controller",
                         "volumeMounts":[
                             {
-                                "mountPath":".docker",
+                                "mountPath":"/root/.docker",
                                 "name":"registry-creds"
                             },
                             {
