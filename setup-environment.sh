@@ -7,7 +7,7 @@
 #--- Common Functions ---
 create_registry_secrets_in_serving(){
     kubectl create ns knative-serving
-    kubectl -n knative-serving create secret generic registry-creds --from-file=config.json=$HOME/.docker/config.json
+    kubectl -n knative-serving create secret generic registry-creds --from-file=config.json=/tmp/config.json
     kubectl -n knative-serving create secret generic registry-certs --from-file=ssl.crt=/tmp/ssl.crt
 }
 
