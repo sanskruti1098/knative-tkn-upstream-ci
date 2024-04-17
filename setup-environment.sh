@@ -44,7 +44,7 @@ BASE_DIR=/opt/knative-upstream-ci
 K8S_POOL_DIR="/root/cluster-pool/pool/k8s"
 K8S_AUTOMN_DIR=/root/k8s-ansible-automation
 SSH_USER=root
-SSH_HOST="130.198.103.76"
+SSH_HOST="128.168.102.190"
 SSH_ARGS="-i /opt/cluster/knative-ssh -o MACs=hmac-sha2-256 -o StrictHostKeyChecking=no -o LogLevel=ERROR -o UserKnownHostsFile=/dev/null"
 
 # exit if CI_JOB is not set
