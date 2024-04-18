@@ -13,10 +13,10 @@ spec:
         - name: SSL_CERT_DIR
           value: /opt/certs
         - name: DOCKER_CONFIG
-          value: /root/.docker
+          value: /.docker
         #@overlay/match missing_ok=True
         volumeMounts:
-        - mountPath: /root/.docker
+        - mountPath: .docker
           name: registry-creds
         - mountPath: /opt/certs
           name: registry-certs
