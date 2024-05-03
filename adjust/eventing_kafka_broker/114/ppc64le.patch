@@ -1,44 +1,5 @@
-diff --git a/data-plane/dispatcher-loom/pom.xml b/data-plane/dispatcher-loom/pom.xml
-index 2546ba55..97339660 100644
---- a/data-plane/dispatcher-loom/pom.xml
-+++ b/data-plane/dispatcher-loom/pom.xml
-@@ -29,7 +29,7 @@
-   <name>dispatcher-loom</name>
- 
-   <properties>
--    <java.version>20</java.version>
-+    <java.version>21</java.version>
-     <argLine>--enable-preview</argLine>
-   </properties>
- 
-diff --git a/data-plane/receiver-loom/pom.xml b/data-plane/receiver-loom/pom.xml
-index ac2e4f60..c1cf0d69 100644
---- a/data-plane/receiver-loom/pom.xml
-+++ b/data-plane/receiver-loom/pom.xml
-@@ -29,7 +29,7 @@
-   <name>receiver-loom</name>
- 
-   <properties>
--    <java.version>20</java.version>
-+    <java.version>21</java.version>
-     <argLine>--enable-preview</argLine>
-   </properties>
- 
-diff --git a/data-plane/tests/pom.xml b/data-plane/tests/pom.xml
-index ed68e229..22d25994 100644
---- a/data-plane/tests/pom.xml
-+++ b/data-plane/tests/pom.xml
-@@ -29,7 +29,7 @@
-   <artifactId>tests</artifactId>
- 
-   <properties>
--    <java.version>20</java.version>
-+    <java.version>21</java.version>
-     <!-- Used Loom Virtual Threads is still a preview feature in JDK20 -->
-     <argLine>--enable-preview</argLine>
-   </properties>
 diff --git a/test/config/monitoring.yaml b/test/config/monitoring.yaml
-index 9d9ec3db..f78302fe 100644
+index 9d9ec3dbd..f78302fe0 100644
 --- a/test/config/monitoring.yaml
 +++ b/test/config/monitoring.yaml
 @@ -43,7 +43,7 @@ spec:
@@ -51,7 +12,7 @@ index 9d9ec3db..f78302fe 100644
          ports:
          - containerPort: 9411
 diff --git a/test/config/sacura-sink-source/300-job.yaml b/test/config/sacura-sink-source/300-job.yaml
-index 2cefa2d6..633b08ee 100644
+index 2cefa2d68..633b08ee6 100644
 --- a/test/config/sacura-sink-source/300-job.yaml
 +++ b/test/config/sacura-sink-source/300-job.yaml
 @@ -45,7 +45,7 @@ spec:
@@ -64,7 +25,7 @@ index 2cefa2d6..633b08ee 100644
              - "--config"
              - "/etc/sacura/sacura.yaml"
 diff --git a/test/config/sacura/300-job.yaml b/test/config/sacura/300-job.yaml
-index e72723bc..cb311392 100644
+index e72723bcd..cb3113921 100644
 --- a/test/config/sacura/300-job.yaml
 +++ b/test/config/sacura/300-job.yaml
 @@ -37,7 +37,7 @@ spec:
@@ -77,20 +38,20 @@ index e72723bc..cb311392 100644
              - "--config"
              - "/etc/sacura/sacura.yaml"
 diff --git a/test/e2e_source/helpers/kafka_helper.go b/test/e2e_source/helpers/kafka_helper.go
-index e502bbf3..c2f9f35c 100644
+index a565b87c6..fb79d59b0 100644
 --- a/test/e2e_source/helpers/kafka_helper.go
 +++ b/test/e2e_source/helpers/kafka_helper.go
 @@ -45,7 +45,7 @@ const (
  	strimziUserResource  = "kafkausers"
  	interval             = 3 * time.Second
  	timeout              = 4 * time.Minute
--	kafkaCatImage        = "docker.io/edenhill/kafkacat:1.6.0"
-+	kafkaCatImage        = "icr.io/upstream-k8s-registry/knative/kafkacat:v1.6.0"
+-	kcatImage            = "quay.io/openshift-knative/kcat:1.7.1"
++	kcatImage            = "icr.io/upstream-k8s-registry/knative/kafkacat:v1.6.0"
  )
  
  var (
 diff --git a/third_party/keda/keda.yaml b/third_party/keda/keda.yaml
-index 7faed28d..f38c3410 100644
+index 7faed28d5..f38c3410f 100644
 --- a/third_party/keda/keda.yaml
 +++ b/third_party/keda/keda.yaml
 @@ -9407,7 +9407,7 @@ spec:
