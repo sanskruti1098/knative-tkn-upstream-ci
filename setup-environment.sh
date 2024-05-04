@@ -136,14 +136,10 @@ then
     then
         scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch /tmp
         kubectl create cm kb-patch -n default --from-file=/tmp/kbpatch
-    elif [[ ${K_BRANCH_NAME} = "111" ]]
+    elif [[ ${K_BRANCH_NAME} = "114" ]]
     then
-        scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch111 /tmp
-        kubectl create cm kb-patch111 -n default --from-file=/tmp/kbpatch111
-    elif [[ ${K_BRANCH_NAME} = "112" ]]
-    then
-        scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch112 /tmp
-        kubectl create cm kb-patch112 -n default --from-file=/tmp/kbpatch112
+        scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch114 /tmp
+        kubectl create cm kb-patch114 -n default --from-file=/tmp/kbpatch114
     elif [[ ${K_BRANCH_NAME} = "113" ]]
     then
         scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch113 /tmp
