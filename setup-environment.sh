@@ -140,10 +140,10 @@ then
     then
         scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch114 /tmp
         kubectl create cm kb-patch114 -n default --from-file=/tmp/kbpatch114
-    elif [[ ${K_BRANCH_NAME} = "113" ]]
+    elif [[ ${K_BRANCH_NAME} = "115" ]]
     then
         scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch113 /tmp
-        kubectl create cm kb-patch113 -n default --from-file=/tmp/kbpatch113
+        kubectl create cm kb-patch115 -n default --from-file=/tmp/kbpatch113
     fi
 else
     scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/${KNATIVE_COMPONENT}/${RELEASE}/* /tmp/
