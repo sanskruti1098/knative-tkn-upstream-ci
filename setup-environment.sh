@@ -1,16 +1,35 @@
 #!/bin/bash
 
-# **** This script runs on upstream knative ci server from ci-script which is stored in GCP. ****
-# It sets up the k8s environment and updates the knative source for running the tests succesfully.
-
+# This script sets up the k8s environment and updates the knative source for running the tests succesfully.
 
 #--- Common Functions ---
+
+SSH_ARGS="-i /root/.ssh/ssh-key -o MACs=hmac-sha2-256 -o StrictHostKeyChecking=no -o LogLevel=ERROR -o UserKnownHostsFile=/dev/null"
+
+# Check if the Hosts file is provided as an argument
+if [ -z "$1" ]; then
+    echo "host file not provided"
+    exit 1
+fi
+
+# exit if CI_JOB is not set
+if [ -z ${CI_JOB} ]
+then
+    echo "Missing CI_JOB variable"
+    exit 1
+fi
+
+while IFS= read -r line; do
+    echo "$line"
+    ls /opt/cluster
+    scp ${SSH_ARGS} /root/.docker/config.json root@${line}:/var/lib/kubelet/config.json
+done < "$1"
+
 create_registry_secrets_in_serving(){
     kubectl create ns knative-serving
     kubectl -n knative-serving create secret generic registry-creds --from-file=config.json=/tmp/config.json
     kubectl -n knative-serving create secret generic registry-certs --from-file=ssl.crt=/tmp/ssl.crt
 }
-
 
 install_contour(){
     # TODO: remove yq dependency
@@ -33,70 +52,10 @@ install_contour(){
     echo "Waiting until all pods under contour-external are ready..."
     kubectl wait --timeout=5m pod --for=condition=Ready -n contour-external -l '!job-name'
 }
+
 #------------------------
 
-
-# TODO: Find root cause for below
-# Sometimes job fails with no host found error. Looks like /etc/hosts patching done in ci-script
-# is not retained for some reason. Adding a fix for such situation.
-
-BASE_DIR=/opt/knative-upstream-ci
-K8S_POOL_DIR="/root/cluster-pool/pool/k8s"
-K8S_AUTOMN_DIR=/root/k8s-ansible-automation
-SSH_USER=root
-SSH_HOST="130.198.103.76"
-SSH_ARGS="-i /opt/cluster/knative-ssh -o MACs=hmac-sha2-256 -o StrictHostKeyChecking=no -o LogLevel=ERROR -o UserKnownHostsFile=/dev/null"
-
-# exit if CI_JOB is not set
-if [ -z ${CI_JOB} ]
-then
-    echo "Missing CI_JOB variable"
-    exit 1
-fi
-
-
-## Fetches the IP address of the bastion node on which the cluster will be created
-echo "Finding available bastion node for k8s cluster creation...."
-BASTION_IP=${1}
-
-if [ -z "${BASTION_IP}" ] || [ "${BASTION_IP}" = "unavailable" ]; then
-    echo "Bastion nodes are currently acquired and are not available now."
-    exit 1
-else
-    C_NAME=${BASTION_IP}
-    echo "Bastion node with the following IP ${BASTION_IP} acquired successfully ."
-fi
-
-echo "Creating k8s cluster...."
-ssh ${SSH_ARGS} ${SSH_USER}@${BASTION_IP} ${K8S_AUTOMN_DIR}/create-cluster.sh
-
-if [ $? != 0 ]
-then
-    echo "Cluster creation failed."
-    kubectl get cm vcm-script -n default -o jsonpath='{.data.script}' > release.sh && chmod +x release.sh
-    bash release.sh ${C_NAME}
-    exit 1
-fi
-
 echo "Setting up access to k8s cluster...."
-# copy access files
-scp ${SSH_ARGS} ${SSH_USER}@${BASTION_IP}:${K8S_AUTOMN_DIR}/share/kubeconfig /tmp
-scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/"${C_NAME}"/config.json /tmp
-scp ${SSH_ARGS} ${SSH_USER}@${C_NAME}:/root/k8s-ansible-automation/share/ssl.crt /tmp
-
-scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/script /tmp
-scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/knativessh /tmp
-
-# setup docker access
-mkdir -p $HOME/.docker/
-cp /tmp/config.json $HOME/.docker/
-
-# setup k8s access
-mkdir -p $HOME/.kube/
-mv /tmp/kubeconfig $HOME/.kube/config
-
-kubectl create cm vcm-ssh-key -n default --from-file=/tmp/knativessh
-kubectl create cm vcm-script -n default --from-file=/tmp/script
 
 curl --connect-timeout 10 --retry 5 -sL https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml | sed '/.*--metric-resolution.*/a\        - --kubelet-insecure-tls' | kubectl apply -f -
 
@@ -114,7 +73,6 @@ then
 elif [[ ${CI_JOB} =~ plugin_event-* ]]
 then
     create_registry_secrets_in_serving &> /dev/null
-
 fi
 
 echo 'Cluster setup successfully'
@@ -125,13 +83,13 @@ K_BRANCH_NAME=$(echo ${CI_JOB} | rev | cut -d'-' -f1 | rev)
 
 if [[ ${CI_JOB} =~ contour-* || ${CI_JOB} =~ kourier-* ]]
 then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/serving/${KNATIVE_COMPONENT}/${RELEASE}/* /tmp/
+    cp adjust/serving/${KNATIVE_COMPONENT}/${RELEASE}/* /tmp/
 elif [[ ${CI_JOB} =~ eventing_rekt-* ]]
 then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing/main/* /tmp/
+    cp adjust/eventing/main/* /tmp/
 elif [[ ${CI_JOB} =~ eventing_kafka-broker-* ]]
 then
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/eventing_kafka_broker/${K_BRANCH_NAME}/* /tmp/
+    cp adjust/eventing_kafka_broker/${K_BRANCH_NAME}/* /tmp/
     if [[ ${K_BRANCH_NAME} = "main" ]]
     then
         scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch /tmp
@@ -146,13 +104,14 @@ then
         kubectl create cm kb-patch115 -n default --from-file=/tmp/kbpatch113
     fi
 else
-    scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:${BASE_DIR}/adjust/${KNATIVE_COMPONENT}/${RELEASE}/* /tmp/
+    cp adjust/${KNATIVE_COMPONENT}/${RELEASE}/* /tmp/
 fi
-
 
 ## Fetch & run adjust.sh script to patch the source code with image replacements and other fixes
 ## Introducing CI_JOB var which can be used to fetch adjust script based on repo-tag
 ## $CI_JOB needs to be set in knative upstream job configurations
 
+cd ..
+
 chmod +x /tmp/adjust.sh
-. /tmp/adjust.sh ${C_NAME}
+. /tmp/adjust.sh 
