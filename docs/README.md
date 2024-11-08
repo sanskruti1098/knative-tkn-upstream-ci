@@ -1,9 +1,5 @@
 # Documentation
 
-## Architecture Overview
-
-Refer [knative_architecture](./kn_arch.md) for the architecture overview.
-
 ## Create & Test New Jobs
 
 Refer [job_setup](create_job.md) for the creating/modifying jobs.

@@ -1,75 +1,94 @@
 ## Create job configuration
 
-The process for adding a new job is to
-1. write config in corresponding yaml file in [knative](https://github.com/knative/infra/tree/main/prow/jobs_config/knative) or [](https://github.com/knative/infra/tree/main/prow/jobs_config/knative-extensions) directory based on the knative component under test.
-2. run [generate-configs.sh](https://github.com/knative/infra/blob/main/hack/generate-configs.sh) which will create the required configuration in [generated](https://github.com/knative/infra/tree/main/prow/jobs/generated) directory.
+Fork the [test-infra](https://github.com/ppc64le-cloud/test-infra/) repo.
 
-Refer PR [#117](https://github.com/knative/infra/pull/117) for more details.
+Write config in corresponding yaml file in [knative](https://github.com/ppc64le-cloud/test-infra/tree/master/config/jobs/periodic/knative) or [knative-extensions](https://github.com/ppc64le-cloud/test-infra/tree/master/config/jobs/periodic/knative-extensions) directory based on the knative component under test.
 
-- Setup env var
+Refer PR [#486](https://github.com/ppc64le-cloud/test-infra/pull/486) for more details.
 
+Add new configurations in corresponding yaml files in  `config/jobs/periodic/knative/`. 
+
+Below configurations are for Operator main branch tests on power which are added to `config/jobs/periodic/knative/operator/main/operator-main.gen.yaml` file.
   ```bash
-  export KNATIVE_TEST_SRC=$HOME/infra
-  ```
-    
-- Clone your fork of [knative/infra](https://github.com/knative/infra)
+periodics:
+  - name: knative-operator-main-periodic
+    labels:
+      preset-knative-powervs: "true"
+    decorate: true
+    cron: "20 0 * * *"
+    extra_refs:
+      - base_ref: main
+        org: ppc64le-cloud
+        repo: knative-upstream-ci
+        workdir: true
+      - base_ref: main
+        org: knative
+        repo: operator
+    spec:
+      containers:
+        - image: quay.io/powercloud/knative-prow-tests:latest
+          resources:
+            requests:
+              cpu: "1500m"
+            limits:
+              cpu: "1500m"
+          command:
+            - runner.sh
+          args:
+            - bash
+            - -c
+            - |
+              set -o errexit
+              set -o nounset
+              set -o pipefail
+              set -o xtrace
 
-  ```bash
-  git clone https://github.com/<org-name>/test-infra.git $KNATIVE_TEST_SRC
-  cd $KNATIVE_TEST_SRC
-  git checkout -b <branch-name>
-  ```
-    
-- Add new configurations in corresponding yaml files in  `prow/jobs_config/knative/`. Refer [ppc64le PRs](https://github.com/knative/infra/pulls?q=ppc64le) for time and other details. 
-Below configurations are for eventing main branch tests on power which are added to `prow/jobs_config/knative/eventing.yaml` file.
-  ```bash
-  - name: ppc64le-e2e-tests
-    cron: 45 2 * * *
-    types: [periodic]
-    requirements: [ppc64le]
-    command: [runner.sh]
-    args:
-      - bash
-      - -c
-      - |
-        server_vm="$(sh /opt/cluster/vm-script)"
-        source /opt/cluster/ci-script "${CI_JOB}" "${server_vm}"
-        ./test/e2e-tests.sh --run-tests
-    env:
-      - name: SYSTEM_NAMESPACE
-        value: knative-eventing
-      - name: SCALE_CHAOSDUCK_TO_ZERO
-        value: "1"
-      - name: CI_JOB
-        value: "eventing-main"
+              TIMESTAMP=$(date +%s)
+              K8S_BUILD_VERSION=$(curl https://storage.googleapis.com/k8s-release-dev/ci/latest.txt)
+
+              kubetest2 tf --powervs-image-name CentOS9-Stream\
+                --powervs-region syd --powervs-zone syd05 \
+                --powervs-service-id af3e8574-29ea-41a2-a9c5-e88cba5c5858 \
+                --powervs-ssh-key knative-ssh-key \
+                --ssh-private-key ~/.ssh/ssh-key \
+                --build-version $K8S_BUILD_VERSION \
+                --cluster-name knative-$TIMESTAMP \
+                --workers-count 2 \
+                --up --auto-approve --retry-on-tf-failure 5 \
+                --break-kubetest-on-upfail true \
+                --powervs-memory 32
+
+              export KUBECONFIG="$(pwd)/knative-$TIMESTAMP/kubeconfig"
+              grep -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' $(pwd)/knative-$TIMESTAMP/hosts > HOSTS_IP
+              source setup-environment.sh HOSTS_IP
+
+              pushd $GOPATH/src/github.com/knative/operator
+              . /tmp/adjust.sh
+              ./test/e2e-tests.sh --run-tests
+              popd
+
+              kubetest2 tf --powervs-region syd --powervs-zone syd05 \
+                --powervs-service-id af3e8574-29ea-41a2-a9c5-e88cba5c5858 \
+                --ignore-cluster-dir true \
+                --cluster-name knative-$TIMESTAMP \
+                --down --auto-approve --ignore-destroy-errors
+          env:
+          - name: CI_JOB
+            value: operator-main
   ```
   
-  In above config, 
-  
-  ```bash
-        server_vm="$(sh /opt/cluster/vm-script)"
-        source /opt/cluster/ci-script "${CI_JOB}" "${server_vm}"
-        ./test/e2e-tests.sh --run-tests
-  ```
-  
-  will remain same for most of the jobs. 
+  - In above config, 
   
   ```bash
   - name: CI_JOB
-    value: "eventing-main"
+    value: "operator-main"
   ```
-  
   will change based on component and version to be tested. `$CI_JOB` is used in `setup-environment.sh` script to fetch correct adjustment script.
-
-- Run `./hack/generate-configs.sh` to generate prow configs
-
-  ```bash
-  ./hack/generate-configs.sh
-  ```
-  
-  This will automatically parse newly added configs and create prow job configurations based on config defined in[.base.yaml](https://github.com/knative/infra/blob/a6bc64d2da9f4055041b4f50925e0a405e4c9e60/prow/jobs_config/.base.yaml#L223).  
-  For instance: `requirements: [ppc64le]` will expand configurations to include env vars and secrets defined in under `ppc64le` key in `.base.yaml`.
 
 ## Modify the adjustment scripts
 
-Refer [adjustment-scripts](https://github.ibm.com/ppc64le-automation/knative-upstream-ci/blob/v-dev/docs/adjustment-scripts.md) to make ppc64le specific changes in `/opt/knative-upstream-ci` folder on the cluster-pool node
+Refer [adjustment-scripts](https://github.com/ppc64le-cloud/knative-upstream-ci/blob/main/docs/adjustment-scripts.md) to make ppc64le specific changes for each component.
+
+## Test your changes locally
+
+Refer [test_job](https://github.com/ppc64le-cloud/knative-upstream-ci/blob/main/docs/testing.md) to test your changes locally.
