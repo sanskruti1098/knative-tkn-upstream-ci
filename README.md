@@ -8,9 +8,9 @@ Knative is an open-source platform for serverless workloads on Kubernetes, strea
 We've enabled knative CI for the following knative components on ppc64le : 
 `client`,`eventing`,`eventing-kafka-broker`,`operator`,`plugin-event`,`serving`.
 
-Here's the [link](https://prow.knative.dev/?job=ppc64le-*) to the ppc64le Knative prow jobs. 
+Here's the [link](https://prow.ppc64le-cloud.cis.ibm.net/?job=knative-*) to the ppc64le Knative prow jobs. 
 
-This [repo](https://github.com/knative/infra) hosts the configs for prow . We raise a PR here to add/modify/remove any Knative job.
+This [repo](https://github.com/ppc64le-cloud/test-infra) hosts the configs for prow. We raise a PR here to add/modify/remove any Knative job.
 
 ## Documentation
 Please read the project [documentation](./docs/README.md) to familiarize with the project setup, involved processes, environments and components.
