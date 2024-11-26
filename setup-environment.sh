@@ -89,19 +89,6 @@ then
 elif [[ ${CI_JOB} =~ eventing_kafka-broker-* ]]
 then
     cp adjust/eventing_kafka_broker/${K_BRANCH_NAME}/* /tmp/
-    if [[ ${K_BRANCH_NAME} = "main" ]]
-    then
-        scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch /tmp
-        kubectl create cm kb-patch -n default --from-file=/tmp/kbpatch
-    elif [[ ${K_BRANCH_NAME} = "114" ]]
-    then
-        scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch114 /tmp
-        kubectl create cm kb-patch114 -n default --from-file=/tmp/kbpatch114
-    elif [[ ${K_BRANCH_NAME} = "115" ]]
-    then
-        scp ${SSH_ARGS} ${SSH_USER}@${SSH_HOST}:/root/cluster-pool/pool/k8s/kbpatch113 /tmp
-        kubectl create cm kb-patch115 -n default --from-file=/tmp/kbpatch113
-    fi
 else
     cp adjust/${KNATIVE_COMPONENT}/${RELEASE}/* /tmp/
 fi
