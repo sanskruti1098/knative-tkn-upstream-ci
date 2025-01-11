@@ -6,21 +6,14 @@ SSH_ARGS="-i /root/.ssh/ssh-key -o MACs=hmac-sha2-256 -o StrictHostKeyChecking=n
 
 # Check if the Hosts file is provided as an argument
 if [ -z "$1" ]; then
-    echo "Host file not provided"
+    echo "host file not provided"
     exit 1
 fi
 
-# exit if KNATIVE_REPO is not set
-if [ -z ${KNATIVE_REPO} ]
+# exit if CI_JOB is not set
+if [ -z ${CI_JOB} ]
 then
-    echo "Missing KNATIVE_REPO variable"
-    exit 1
-fi
-
-# exit if KNATIVE_RELEASE is not set
-if [ -z ${KNATIVE_RELEASE} ]
-then
-    echo "Missing KNATIVE_RELEASE variable"
+    echo "Missing CI_JOB variable"
     exit 1
 fi
 
@@ -61,29 +54,43 @@ install_contour(){
 
 #------------------------
 
-echo "Cluster setup started for Knative"
-
+echo "Setting up access to k8s cluster...."
 kubectl create ns knative-serving
 curl --connect-timeout 10 --retry 5 -sL https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml | sed '/.*--metric-resolution.*/a\        - --kubelet-insecure-tls' | kubectl apply -f -
 
-if [[ ${KNATIVE_REPO} == client ]]
+# TODO: merge with patching conditional code below?
+if [[ ${CI_JOB} =~ client-* ]]
 then
     create_registry_secrets_in_serving &> /dev/null
     install_contour &> /dev/null
-elif [[ ${KNATIVE_REPO} == operator ]]
+elif [[ ${CI_JOB} =~ operator-* ]]
 then
     install_contour &> /dev/null
-elif [[ ${KNATIVE_REPO} == serving ]]
+elif [[ ${CI_JOB} =~ contour-* || ${CI_JOB} =~ kourier-* ]]
 then
     create_registry_secrets_in_serving &> /dev/null
-elif [[ ${KNATIVE_REPO} =~ kn-plugin-event ]]
+elif [[ ${CI_JOB} =~ plugin_event-* ]]
 then
     create_registry_secrets_in_serving &> /dev/null
 fi
 
-echo "Cluster setup successfully"
+echo 'Cluster setup successfully'
+echo 'Patching source code with ppc64le specific changes....'
+KNATIVE_COMPONENT=$(echo ${CI_JOB} | cut -d '-' -f1)
+RELEASE=$(echo ${CI_JOB} | cut -d '-' -f2-)
+K_BRANCH_NAME=$(echo ${CI_JOB} | rev | cut -d'-' -f1 | rev)
 
-# Copy adjustment scripts 
-cp adjust/${KNATIVE_REPO}/${KNATIVE_RELEASE}/* /tmp/
+if [[ ${CI_JOB} =~ contour-* || ${CI_JOB} =~ kourier-* ]]
+then
+    cp adjust/serving/${KNATIVE_COMPONENT}/${RELEASE}/* /tmp/
+elif [[ ${CI_JOB} =~ eventing_rekt-* ]]
+then
+    cp adjust/eventing/main/* /tmp/
+elif [[ ${CI_JOB} =~ eventing_kafka-broker-* ]]
+then
+    cp adjust/eventing_kafka_broker/${K_BRANCH_NAME}/* /tmp/
+else
+    cp adjust/${KNATIVE_COMPONENT}/${RELEASE}/* /tmp/
+fi
 
 chmod +x /tmp/adjust.sh
