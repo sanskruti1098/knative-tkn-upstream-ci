@@ -40,6 +40,12 @@ create_registry_secrets_in_serving(){
     kubectl -n knative-serving create secret generic registry-certs --from-file=ssl.crt=/etc/ssl/certs/ca-certificates.crt
 }
 
+install_go(){
+    go install golang.org/dl/go1.22.7@latest
+    go1.22.7 download
+    alias go=/go/bin/go1.22.7
+}
+
 install_contour(){
     # TODO: remove yq dependency
     wget https://github.com/mikefarah/yq/releases/download/v4.25.3/yq_linux_amd64 -P /tmp
@@ -79,6 +85,7 @@ then
 elif [[ ${KNATIVE_REPO} =~ kn-plugin-event ]]
 then
     create_registry_secrets_in_serving &> /dev/null
+    install_go &> /dev/null
 fi
 
 echo "Cluster setup successfully"

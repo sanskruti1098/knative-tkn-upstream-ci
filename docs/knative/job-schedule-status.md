@@ -16,7 +16,7 @@
 | knative-sasl-ssl-eventing-kafka-broker-release-1.17-periodic    | 90		      | 0 11 * * *	 | ✅             |
 | knative-ssl-eventing-kafka-broker-main-periodic                 | 90		      | 0 12 * * *	 | ✅             |
 | knative-ssl-eventing-kafka-broker-release-1.17-periodic         | 90	      	      | 0 13 * * *	 | ✅             |
-| knative-serving-kourier-main-periodic                           | 180		      | 0 14 * * *	 | ❌             |
-| knative-serving-kourier-release-1.17-periodic                   | 180		      | 0 15 * * *	 | ❌             |
-| knative-plugin-event-main-periodic                              | 60		      | 0 16 * * *	 | ❌             |
-| knative-plugin-event-release-1.17-periodic                      | 60		      | 0 17 * * *	 | ❌             |
+| knative-plugin-event-main-periodic                              | 60		      | 0 14 * * *	 | ✅             |
+| knative-plugin-event-release-1.17-periodic                      | 60		      | 0 15 * * *	 | ✅             |
+| knative-serving-kourier-main-periodic                           | 180		      | 0 16 * * *	 | ❌             |
+| knative-serving-kourier-release-1.17-periodic                   | 180		      | 0 17 * * *	 | ❌             |
