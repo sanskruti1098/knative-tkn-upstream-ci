@@ -52,7 +52,7 @@ jobs:
       run: |
           input_file="instance_list"
           if [ ! -s $input_file ]; then
-            echo "$input_file is empty or does not exist."
+            echo "No PVS instance found to delete."
           else
             while read -r id name;
             do
@@ -73,7 +73,7 @@ jobs:
       run: |
           input_file="subnet_list"
           if [ ! -s $input_file ]; then
-            echo "$input_file is empty or does not exist."
+            echo "No subnet found to delete."
           else
             while read -r networkID name;
             do
