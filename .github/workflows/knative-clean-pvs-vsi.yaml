@@ -1,0 +1,85 @@
+name: Cleanup unused Knative PVS and subnets
+
+on:
+  schedule:
+    - cron: "35 17 * * *"  # Runs daily at ~11:05 PM IST)
+  workflow_dispatch:
+
+env:
+  PCLOUD_IBM_API_KEY: ${{ secrets.PCLOUD_IBM_API_KEY }}
+  PCLOUD_IBM_REGION: au-syd
+
+jobs:
+  delete-pvs-subnet:
+    name: Delete dangling PVS and subnets
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Install IBM Cloud CLI
+      run: |
+        curl -fsSL https://clis.cloud.ibm.com/install/linux | sh
+        ibmcloud --version
+        ibmcloud config --check-version=false
+        ibmcloud plugin install -f power-iaas
+
+    - name: Authenticate with IBM Cloud CLI
+      run: |
+        ibmcloud login --apikey "${PCLOUD_IBM_API_KEY}" -r "${PCLOUD_IBM_REGION}" > /dev/null 2>&1
+
+    - name: Fetch CRN of workspace
+      run: |
+        echo "Fetching CRN of workspace 'rdr-knative-prow-testbed-syd05'"
+        crn=$(ibmcloud pi workspace list --json | jq  '.[] | .workspaces[] | select(.name == "rdr-knative-prow-testbed-syd05") | "\(.details.crn)"' | tr -d '"')
+        echo "CRN=$crn" >> $GITHUB_ENV
+    
+    - name: Set the target workspace
+      run: |
+        if [ ! -z $CRN ]; then
+          echo "Set the workspace for target CRN $CRN"
+          ibmcloud pi workspace target $CRN > /dev/null 2>&1
+        fi
+
+    - name: Fetching PVS instances.........
+      run: |
+          ibmcloud pi instance list
+          instances=$(ibmcloud pi instance list --json | jq -r '.pvmInstances[] | "\(.id) \(.name)"')
+          echo -n "${instances}" > instance_list
+
+    - name: Delete PVS instances.........
+      run: |
+          input_file="instance_list"
+          if [ ! -s $input_file ]; then
+            echo "No PVS instance found to delete."
+          else
+            while read -r id name;
+            do
+              echo "Deleting PVS instance: $id $name........."
+              if ! ibmcloud pi instance delete $id --delete-data-volumes=True; then
+                echo "Failed to delete instance: $id $name"
+              fi  
+            done < $input_file
+          fi
+
+    - name: Fetching subnet instances.........
+      run: |
+          ibmcloud pi snet ls
+          subnets=$(ibmcloud pi snet ls --json | jq -r '.networks[] | "\(.networkID) \(.name)"')
+          echo -n "${subnets}" > subnet_list
+
+    - name: Deleting subnet instances.........
+      run: |
+          input_file="subnet_list"
+          if [ ! -s $input_file ]; then
+            echo "No subnet found to delete."
+          else
+            while read -r networkID name;
+            do
+              echo "Deleting network: $networkID $name........."
+              if ! ibmcloud pi snet delete $networkID; then
+                echo "Failed to delete instance: $id $name"
+              fi  
+            done < $input_file
+          fi
