@@ -12,7 +12,7 @@ PVS_SVC_ID='e04ebc6a-3b99-4b0f-9dcc-f6352033f44b'
 if [[ "$1" == "create" ]]
 then
     echo "Cluster creation started"
-    kubetest2 tf --powervs-image-name centos-9-stream \
+    kubetest2 tf --powervs-image-name centos9-stream \
       --powervs-region syd --powervs-zone $PVS_ZONE \
       --powervs-service-id $PVS_SVC_ID \
       --powervs-ssh-key knative-ssh-key \
