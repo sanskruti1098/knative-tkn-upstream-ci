@@ -6,12 +6,16 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
+PVS_REGION='syd'
+PVS_ZONE='syd04'
+PVS_SVC_ID='e04ebc6a-3b99-4b0f-9dcc-f6352033f44b'
+
 if [[ "$1" == "create" ]]
 then
     echo "Cluster creation started"
-    kubetest2 tf --powervs-image-name CentOS9-Stream\
-      --powervs-region syd --powervs-zone syd05 \
-      --powervs-service-id af3e8574-29ea-41a2-a9c5-e88cba5c5858 \
+    kubetest2 tf --powervs-image-name centos9-stream \
+      --powervs-region $PVS_REGION --powervs-zone $PVS_ZONE \
+      --powervs-service-id $PVS_SVC_ID \
       --powervs-ssh-key knative-ssh-key \
       --ssh-private-key ~/.ssh/ssh-key \
       --directory release \
@@ -31,11 +35,9 @@ then
 elif [[ "$1" == "delete" ]]
 then
     echo "Resources deletion started "
-    pushd $GOPATH/src/github.com/ppc64le-cloud/knative-tkn-upstream-ci
-    kubetest2 tf --powervs-region syd --powervs-zone syd05 \
-      --powervs-service-id af3e8574-29ea-41a2-a9c5-e88cba5c5858 \
+    kubetest2 tf --powervs-region $PVS_REGION --powervs-zone $PVS_ZONE \
+      --powervs-service-id $PVS_SVC_ID \
       --ignore-cluster-dir true \
       --cluster-name knative-$TIMESTAMP \
       --down --auto-approve --ignore-destroy-errors
-    popd
 fi

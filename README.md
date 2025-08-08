@@ -5,7 +5,7 @@ This repo hosts automation, configurations, documentation &amp; scripts to enabl
 
 ### PPC64le Knative jobs
 We've enabled CI for the following Knative components on ppc64le : 
-`client`,`eventing`,`eventing-kafka-broker`,`operator`.
+`client`,`eventing`,`eventing-kafka-broker`,`operator`,`plugin-event`.
 
 Here's the [link](https://prow.ppc64le-cloud.cis.ibm.net/?job=knative-*) to the ppc64le Knative prow jobs. 
 
