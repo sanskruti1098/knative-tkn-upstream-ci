@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 env:
-  PCLOUD_IBM_API_KEY: ${{ secrets.PCLOUD_IBM_API_KEY }}
-  PCLOUD_IBM_REGION: au-syd
+  TEKTON_IBM_API_KEY: ${{ secrets.TEKTON_IBM_API_KEY }}
+  TEKTON_IBM_REGION: au-syd
 
 jobs:
   delete-pvs-subnet:
@@ -27,7 +27,7 @@ jobs:
 
     - name: Authenticate with IBM Cloud CLI
       run: |
-        ibmcloud login --apikey "${PCLOUD_IBM_API_KEY}" -r "${PCLOUD_IBM_REGION}" > /dev/null 2>&1
+        ibmcloud login --apikey "${TEKTON_IBM_API_KEY}" -r "${TEKTON_IBM_REGION}" > /dev/null 2>&1
 
     - name: Fetch CRN of workspace
       run: |
