@@ -13,19 +13,6 @@ index 58881521e..380392b62 100644
              - name: STRIMZI_NAMESPACE
                valueFrom:
                  fieldRef:
-diff --git a/test/config/monitoring.yaml b/test/config/monitoring.yaml
-index 9d9ec3dbd..f78302fe0 100644
---- a/test/config/monitoring.yaml
-+++ b/test/config/monitoring.yaml
-@@ -43,7 +43,7 @@ spec:
-     spec:
-       containers:
-       - name: zipkin
--        image: ghcr.io/openzipkin/zipkin:2
-+        image: icr.io/upstream-k8s-registry/knative/openzipkin/zipkin:test
-         imagePullPolicy: IfNotPresent
-         ports:
-         - containerPort: 9411
 diff --git a/test/config/sacura-sink-source/300-job.yaml b/test/config/sacura-sink-source/300-job.yaml
 index 2cefa2d68..633b08ee6 100644
 --- a/test/config/sacura-sink-source/300-job.yaml
