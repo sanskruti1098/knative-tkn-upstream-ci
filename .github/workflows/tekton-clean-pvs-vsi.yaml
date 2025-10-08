@@ -2,7 +2,7 @@ name: Cleanup unused Tekton PVS and subnets
 
 on:
   schedule:
-    - cron: "35 17 * * *"  # Runs daily at ~11:05 PM IST)
+    - cron: "35 19 * * *"  # Runs daily at ~1:05 AM IST)
   workflow_dispatch:
 
 env:
@@ -31,8 +31,8 @@ jobs:
 
     - name: Fetch CRN of workspace
       run: |
-        echo "Fetching CRN of workspace 'rdr-ghatwal-tekton-knativeCI-PROD-syd05'"
-        crn=$(ibmcloud pi workspace list --json | jq  '.[] | .workspaces[] | select(.name == "rdr-ghatwal-tekton-knativeCI-PROD-syd05") | "\(.details.crn)"' | tr -d '"')
+        echo "Fetching CRN of workspace 'rdr-ghatwala-tekton-knativeCI-PROD-syd05'"
+        crn=$(ibmcloud pi workspace list --json | jq  '.[] | .workspaces[] | select(.name == "rdr-ghatwala-tekton-knativeCI-PROD-syd05") | "\(.details.crn)"' | tr -d '"')
         echo "CRN=$crn" >> $GITHUB_ENV
     
     - name: Set the target workspace
