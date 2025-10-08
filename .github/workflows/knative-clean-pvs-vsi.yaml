@@ -31,7 +31,7 @@ jobs:
 
     - name: Fetch CRN of workspace
       run: |
-        echo "Fetching CRN of workspace 'rdr-knative-prow-testbed-syd05'"
+        echo "Fetching CRN of workspace 'rdr-knative-prow-testbed-syd04'"
         crn=$(ibmcloud pi workspace list --json | jq  '.[] | .workspaces[] | select(.name == "rdr-knative-prow-testbed-syd04") | "\(.details.crn)"' | tr -d '"')
         echo "CRN=$crn" >> $GITHUB_ENV
     
